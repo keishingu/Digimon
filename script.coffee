@@ -50,7 +50,7 @@ class Digitama
     eat: ->
         hungry -= 1
         console.log "#{hungry}"
-    drawing = (dots) ->
+    drawing: (dots) ->
        ctx.clearRect baseX, baseY, 175, 175
        x = baseX
        y = baseY
@@ -69,5 +69,6 @@ class Zurumon extends Digitama
     constructor: ->
     	@name = "zurumon"
 
-monster = new Zurumon
-monster.drawing(waitingDots[0])
+monster = new Digitama
+monster.wait()
+monster.drawing(monster.waitingDots)
