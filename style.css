@@ -1,0 +1,65 @@
+#main {
+    position:relative;
+    width:380px;
+    height:270px;
+    border-radius: 5px;
+    //background-color: #009944;
+    background: -webkit-gradient(linear, left top, left bottom, from(#4d8), color-stop(0.01, #1a5), color-stop(0.5, #1a5), color-stop(0.99, #094), to(#083));
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.4) ;
+}
+
+#jail {
+    position:relative;
+    top:20px;
+    left:20px;
+    width:210px;
+    height:210px;
+    border:solid 10px #ffcb03;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.8) inset;
+    float:left;
+}
+
+#monitor {
+    position:relative;
+    top:5px;
+    left:5px;
+    background-color: #eee7e0;
+    background-image: url("http://jsrun.it/assets/6/f/U/q/6fUqL.png");
+    width:200px;
+    height:200px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4) inset;
+}
+#sample {
+    position:absolute;
+    top:0px;
+    left:10px;
+}
+
+#buttons {
+    float:left;
+}
+li {
+    margin: 30px;
+    margin-left: 50px;
+    width:40px;
+  	height:40px;
+    border: solid 5px #006611;
+    list-style-type: none;
+    background-color: #ffcb03;
+    border-radius: 30px;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4) inset;
+}
+li:hover {
+  	box-shadow: none;
+}
+li:active {
+  	box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.8) inset;    
+}
+
+@media screen and (max-width: 400px) {
+	#main{
+		-webkit-transform: rotate(90deg) translate(60px,50px);
+		-moz-transform: rotate(90deg) translate(60px,50px);
+	}
+}
