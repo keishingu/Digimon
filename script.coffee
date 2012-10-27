@@ -6,7 +6,7 @@ baseY = 0
 
 class Digitama
 	constructor: ->
-		@waitingDots = [
+		@waiting = [
 				[
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -77,6 +77,6 @@ monster.wait()
 frame = 1
 
 setInterval (->
-		monster.drawing monster.waitingDots[frame%2]
+		monster.drawing monster.waiting[frame%2]
 		frame++
 ), 1000
