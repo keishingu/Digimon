@@ -1,11 +1,14 @@
+# HTML内のcanvas要素を取得し、描画対象にする
 canvas = document.getElementById 'sample'
 ctx = canvas.getContext '2d'
 
+# ドットを描く初期位置
 baseX = 0
 baseY = 0
 
 class Digitama
 	constructor: ->
+		# 待機状態のドットを２次元配列で宣言し、数フレーム用意する
 		@waiting = [
 				[
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -45,6 +48,7 @@ class Digitama
 				]
 			] 
 		@name = "digitama"
+	# 空腹度、体力の初期値
 	hungry = 4
 	vitality = 4
 	wait: -> 
@@ -52,6 +56,7 @@ class Digitama
 	eat: ->
 		hungry -= 1
 		console.log "#{hungry}"
+	# ドットをcanvas要素に描く
 	drawing: (dots) ->
 		ctx.clearRect baseX, baseY, 175, 175
 		x = baseX
@@ -71,11 +76,13 @@ class Zurumon extends Digitama
 	constructor: ->
 		@name = "zurumon"
 
+# モンスターを作る
 monster = new Digitama
 monster.wait()
 
 frame = 1
 
+# 1秒ごとに待機状態を入れ替える
 setInterval (->
 		monster.drawing monster.waiting[frame%2]
 		frame++
