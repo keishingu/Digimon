@@ -79,16 +79,12 @@ class Digitama
 		ctx.clearRect baseX, baseY, 175, 175
 		x = baseX
 		y = baseY
-		i = 0
-		while i < 16
-			j = 0
-			while j < 16
+		for i in [0...16]
+			for j in [0...16]
 				ctx.fillRect x, y, 10, 10  if dots[i][j] is 1
 				x += 11
-				j++
 			x = baseX
 			y += 11
-			i++    
 	wait: ->
 		frame = 1
 		console.log @waitingDots

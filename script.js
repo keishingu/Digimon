@@ -52,24 +52,20 @@
 
 
     drawing = function(dots) {
-      var i, j, x, y, _results;
+      var i, j, x, y, _i, _j, _results;
       ctx.clearRect(baseX, baseY, 175, 175);
       x = baseX;
       y = baseY;
-      i = 0;
       _results = [];
-      while (i < 16) {
-        j = 0;
-        while (j < 16) {
+      for (i = _i = 0; _i < 16; i = ++_i) {
+        for (j = _j = 0; _j < 16; j = ++_j) {
           if (dots[i][j] === 1) {
             ctx.fillRect(x, y, 10, 10);
           }
           x += 11;
-          j++;
         }
         x = baseX;
-        y += 11;
-        _results.push(i++);
+        _results.push(y += 11);
       }
       return _results;
     };
