@@ -9,7 +9,8 @@ baseY = 0
 class Digitama
 	constructor: ->
 		# 待機状態のドットを２次元配列で宣言し、数フレーム用意する
-		@waiting = [
+		@name = "digitama"
+		@waitingDots = [
 				[
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -47,17 +48,34 @@ class Digitama
 					[0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0]
 				]
 			] 
-		@name = "digitama"
+		###
+		@drawing = (dots) ->
+			ctx.clearRect baseX, baseY, 175, 175
+			x = baseX
+			y = baseY
+			i = 0
+			while i < 16
+				j = 0
+				while j < 16
+					ctx.fillRect x, y, 10, 10  if dots[i][j] is 1
+					x += 11
+					j++
+				x = baseX
+				y += 11
+				i++    
+		###
 	# 空腹度、体力の初期値
 	hungry = 4
 	vitality = 4
+	###
 	wait: -> 
 		console.log "#{@name} moving!"
 	eat: ->
 		hungry -= 1
 		console.log "#{hungry}"
-	# ドットをcanvas要素に描く
-	drawing: (dots) ->
+	ドットをcanvas要素に描く
+	###
+	drawing = (dots) ->
 		ctx.clearRect baseX, baseY, 175, 175
 		x = baseX
 		y = baseY
@@ -71,6 +89,19 @@ class Digitama
 			x = baseX
 			y += 11
 			i++    
+	wait: ->
+		frame = 1
+		console.log @waitingDots
+		#console.log @name
+		#drawing @waitingDots[1]
+		###
+		setInterval (->
+			frame++
+		), 1000
+		###
+		setInterval do (@waitingDots) ->
+			-> drawing @waitingDots[frame%2]; frame++
+		, 1000
 
 class Zurumon extends Digitama
 	constructor: ->
@@ -80,10 +111,12 @@ class Zurumon extends Digitama
 monster = new Digitama
 monster.wait()
 
-frame = 1
-
+###
 # 1秒ごとに待機状態を入れ替える
+frame = 1
 setInterval (->
-		monster.drawing monster.waiting[frame%2]
+		console.log monster.waitingDots[frame%2]
+		monster.drawing monster.waitingDots[frame%2]
 		frame++
 ), 1000
+###
