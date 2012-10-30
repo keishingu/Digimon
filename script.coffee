@@ -6,6 +6,7 @@ ctx = canvas.getContext '2d'
 baseX = 0
 baseY = 0
 
+# すべてのモンスターはデジタマを継承する
 class Digitama
 	constructor: ->
 		# 待機状態のドットを２次元配列で宣言し、数フレーム用意する
