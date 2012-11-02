@@ -113,7 +113,7 @@ class Digitama
 				baseX = 0
 				ctx.clearRect 0, 0, 200, 200 # ちょっと良くない書き方
 				drawing @waitingDots[frame%2]
-				console.log "wait #{baseX}"
+				#console.log "wait #{baseX}"
 				frame++
 		, 1000
 	# 食事状態
@@ -221,8 +221,13 @@ monster = new Digitama
 # 待機状態にする
 # monster.wait()
 monster.wait()
-monster.eat(meet)
+# monster.eat(meet)
 
+func1 = ->
+	$('#buttonA').bind 'click', (event) ->
+		monster.eat(meet)
+		true
+		
 # 一定時間が経ったら進化する
 setTimeout ->
 	monster = new Zurumon
