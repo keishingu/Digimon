@@ -107,22 +107,36 @@ class Digitama
 	
 	# 待機状態
 	wait: ->
-		frame = 1
-		setInterval do (@waitingDots) ->
-			-> drawing @waitingDots[frame%2]; frame++
+		frame = 0
+		waiting = setInterval do (@waitingDots) ->
+			->
+				baseX = 0
+				ctx.clearRect 0, 0, 200, 200 # ちょっと良くない書き方
+				drawing @waitingDots[frame%2]
+				console.log "wait #{baseX}"
+				frame++
 		, 1000
 	# 食事状態
 	eat: (anything)->
-		frame = 0
-		setInterval do (@waitingDots) ->
-			-> drawing @waitingDots[frame%2]; baseX = 100; drawing anything[frame%3]; baseX = 0; frame++
-		, 1000
-		hungry++
-		console.log hungry
+		if @eatingDots
+			frame = 0
+			eating = setInterval do (@eatingDots) ->
+				->
+					if frame is 2
+						clearInterval eating
+					baseX = 0
+					baseY = 88
+					drawing anything[frame%3]
+					baseX = 88
+					baseY = 0
+					drawing @eatingDots[frame%2]
+					frame++
+			, 1000
+			hungry++
+			console.log hungry
 		
 class Zurumon extends Digitama
 	constructor: ->
-		super
 		@name = "zurumon"
 		@waitingDots = [
 				[
@@ -162,11 +176,51 @@ class Zurumon extends Digitama
 					[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0]
 				]
 			] 
+		@eatingDots = [
+				[
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0]
+					[0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0]
+					[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0]
+					[0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0]
+					[0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0]
+					[0,0,0,0,1,0,0,0,0,0,1,1,0,0,0,0]
+					[0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0]
+					[0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0]
+				]
+				[
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+					[0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0]
+					[0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0]
+					[0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0]
+					[0,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0]
+					[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0]
+				]
+			] 
+
 
 # モンスターを作る
-monster = new Zurumon
+monster = new Digitama
 # 待機状態にする
 # monster.wait()
+monster.wait()
 monster.eat(meet)
 
 # 一定時間が経ったら進化する
