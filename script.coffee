@@ -1,3 +1,6 @@
+## DITIGAL MONSTER
+
+# ## 初期設定
 # HTML内のcanvas要素を取得し、描画対象にする
 canvas = document.getElementById 'sample'
 ctx = canvas.getContext '2d'
@@ -6,6 +9,7 @@ ctx = canvas.getContext '2d'
 baseX = 0
 baseY = 0
 
+# ### class Digitama
 # デジタマを表すクラス
 # すべてのモンスターはデジタマを継承する
 class Digitama
@@ -107,9 +111,18 @@ class Digitama
 		setInterval do (@waitingDots) ->
 			-> drawing @waitingDots[frame%2]; frame++
 		, 1000
-
+	# 食事状態
+	eat: ->
+		frame = 1
+		setInterval do (@meet) ->
+			-> baseX = 100; drawing @meet[frame%2]; frame++
+		, 1000
+		hungry++
+		console.log hungry
+		
 class Zurumon extends Digitama
 	constructor: ->
+		super
 		@name = "zurumon"
 		@waitingDots = [
 				[
@@ -151,9 +164,10 @@ class Zurumon extends Digitama
 			] 
 
 # モンスターを作る
-monster = new Digitama
+monster = new Zurumon
 # 待機状態にする
-monster.wait()
+# monster.wait()
+monster.eat()
 
 # 一定時間が経ったら進化する
 setTimeout ->
