@@ -88,52 +88,6 @@ class Digitama
 				]
 			] 
 	
-	# 空腹度、体力の初期値
-	hungry = 4
-	vitality = 4
-	
-	# ドットを描く関数
-	drawing = (dots) ->
-		len = dots.length
-		ctx.clearRect baseX, baseY, (10+1)*len, (10+1)*len
-		x = baseX
-		y = baseY
-		for i in [0...len]
-			for j in [0...len]
-				ctx.fillRect x, y, 10, 10 if dots[i][j] is 1
-				x += 11
-			x = baseX
-			y += 11
-	
-	# 待機状態
-	wait: ->
-		frame = 0
-		waiting = setInterval do (@waitingDots) ->
-			->
-				baseX = 0
-				ctx.clearRect 0, 0, 200, 200 # ちょっと良くない書き方
-				drawing @waitingDots[frame%2]
-				#console.log "wait #{baseX}"
-				frame++
-		, 1000
-	# 食事状態
-	eat: (anything)->
-		if @eatingDots
-			frame = 0
-			eating = setInterval do (@eatingDots) ->
-				->
-					if frame is 2
-						clearInterval eating
-					baseX = 0
-					baseY = 88
-					drawing anything[frame%3]
-					baseX = 88
-					baseY = 0
-					drawing @eatingDots[frame%2]
-					frame++
-			, 1000
-			hungry++
-			console.log hungry
 		
 class Zurumon extends Digitama
 	constructor: ->
@@ -215,22 +169,57 @@ class Zurumon extends Digitama
 				]
 			] 
 
+# 空腹度、体力の初期値
+hungry = 4
+vitality = 4
+
+seen = "wait";
+
+# ドットを描く関数
+drawing = (dots) ->
+	len = dots.length
+	ctx.clearRect baseX, baseY, (10+1)*len, (10+1)*len
+	x = baseX
+	y = baseY
+	for i in [0...len]
+		for j in [0...len]
+			ctx.fillRect x, y, 10, 10 if dots[i][j] is 1
+			x += 11
+		x = baseX
+		y += 11
+
 
 # モンスターを作る
 monster = new Digitama
 # 待機状態にする
-monster.wait()
-# monster.eat(meet)
 
 btnA = document.getElementById 'buttonA'
-console.log btnA
+#console.log btnA
 btnA.onclick = ->
 	# clearInterval waiting
 	# console.log "click!"
-	monster.eat(meet)
-		
+	if monster.eatingDots
+		ctx.clearRect 0, 0, 200, 200
+		seen = "eat";
+	
+frame = 0;
+setInterval ->
+	switch seen
+		when "wait"
+			baseX = 0
+			baseY = 0
+			drawing monster.waitingDots[frame%2]
+		when "eat"
+			baseX = 0
+			baseY = 88
+			drawing meet[frame%3]
+			baseX = 88
+			baseY = 0
+			drawing monster.eatingDots[frame%2]
+	frame++
+, 800
+
 # 一定時間が経ったら進化する
 setTimeout ->
 	monster = new Zurumon
-	monster.wait()
 , 4950
