@@ -219,14 +219,15 @@ class Zurumon extends Digitama
 # モンスターを作る
 monster = new Digitama
 # 待機状態にする
-# monster.wait()
 monster.wait()
 # monster.eat(meet)
 
-func1 = ->
-	$('#buttonA').bind 'click', (event) ->
-		monster.eat(meet)
-		true
+btnA = document.getElementById 'buttonA'
+console.log btnA
+btnA.onclick = ->
+	# clearInterval waiting
+	# console.log "click!"
+	monster.eat(meet)
 		
 # 一定時間が経ったら進化する
 setTimeout ->
