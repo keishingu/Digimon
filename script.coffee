@@ -173,6 +173,7 @@ class Zurumon extends Digitama
 hungry = 4
 vitality = 4
 
+# 待機状態にする
 seen = "wait";
 
 # ドットを描く関数
@@ -191,13 +192,9 @@ drawing = (dots) ->
 
 # モンスターを作る
 monster = new Digitama
-# 待機状態にする
 
 btnA = document.getElementById 'buttonA'
-#console.log btnA
 btnA.onclick = ->
-	# clearInterval waiting
-	# console.log "click!"
 	if monster.eatingDots
 		ctx.clearRect 0, 0, 200, 200
 		seen = "eat";
