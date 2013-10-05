@@ -42,9 +42,13 @@ meet = [
 		]
 	]
 
+# ### class SuperMonster
+# モンスターのひな形
+class SuperMonster
+	eat: -> drawing(@eatingDots, 0, 0)
+
 # ### class Digitama
 # デジタマを表すクラス
-# すべてのモンスターはデジタマを継承する
 class Digitama
 	constructor: ->
 		@name = "digitama"
