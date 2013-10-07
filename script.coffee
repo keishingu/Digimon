@@ -103,11 +103,11 @@ class SuperMonster
 			] 
 	shout: (name) ->
 		alert name 
-	wait: (dot = @waitingDots) ->
+	wait: ->
 		f = 0
-		setInterval ->
+		setInterval =>
 			util.clearDot()
-			util.drawDot(dot[f%2], 0, 0)
+			util.drawDot(@waitingDots[f%2], 0, 0)
 			f += 1
 		, 1000
 	eat: -> 

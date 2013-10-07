@@ -50,15 +50,13 @@
       return alert(name);
     };
 
-    SuperMonster.prototype.wait = function(dot) {
-      var f;
-      if (dot == null) {
-        dot = this.waitingDots;
-      }
+    SuperMonster.prototype.wait = function() {
+      var f,
+        _this = this;
       f = 0;
       return setInterval(function() {
         util.clearDot();
-        util.drawDot(dot[f % 2], 0, 0);
+        util.drawDot(_this.waitingDots[f % 2], 0, 0);
         return f += 1;
       }, 1000);
     };
