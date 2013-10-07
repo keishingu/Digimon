@@ -100,7 +100,7 @@
 
     return Zurumon;
 
-  })(Digitama);
+  })(SuperMonster);
 
   monster = new Zurumon;
 

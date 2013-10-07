@@ -164,7 +164,7 @@ class Digitama extends SuperMonster
 				]
 			] 
 
-class Zurumon extends Digitama
+class Zurumon extends SuperMonster
 	constructor: ->
 		@name = "zurumon"
 		@waitingDots = [
