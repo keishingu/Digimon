@@ -22,7 +22,7 @@ util.drawDot = (dots, start_x, start_y) ->
 		for j in [0...len]
 			ctx.fillRect x, y, 10, 10 if dots[i][j] is 1
 			x += 11
-		x = baseX
+		x = start_x
 		y += 11
 
 meet = [
@@ -110,12 +110,12 @@ class SuperMonster
 			util.drawDot(@waitingDots[f%2], 0, 0)
 			f += 1
 		, 1000
-	eat: -> 
+	eat: (food) -> 
 		f = 0
-		setInterval ->
-			util.clearDot
-			util.drawDot(meet[f%3], 0, 0)
-			util.drawDot(@eatingDots[f%3], 20, 0)
+		setInterval =>
+			util.clearDot()
+			util.drawDot(food[f%3], 0, 88)
+			util.drawDot(@eatingDots[f%2], 66, 0)
 			f += 1
 		, 1000
 
@@ -164,7 +164,6 @@ class Digitama extends SuperMonster
 				]
 			] 
 
-###
 class Zurumon extends Digitama
 	constructor: ->
 		@name = "zurumon"
@@ -244,11 +243,9 @@ class Zurumon extends Digitama
 					[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0]
 				]
 			] 
-###
 
-monster = new Digitama
-# monster.shout(monster.name)
-monster.wait()
+monster = new Zurumon
+monster.eat meet
 
 ###
 
