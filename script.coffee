@@ -247,58 +247,57 @@ class Zurumon extends SuperMonster
 monster = new Zurumon
 monster.eat meet
 
-###
-
-# 空腹度、体力の初期値
-hungry = 4
-vitality = 4
-
-# 待機状態にする
-seen = "wait";
-
-# ドットを描く関数
-drawing = (dots) ->
-	len = dots.length
-	ctx.clearRect baseX, baseY, (10+1)*len, (10+1)*len
-	x = baseX
-	y = baseY
-	for i in [0...len]
-		for j in [0...len]
-			ctx.fillRect x, y, 10, 10 if dots[i][j] is 1
-			x += 11
-		x = baseX
-		y += 11
 
 
-# モンスターを作る
-monster = new Digitama
+# # 空腹度、体力の初期値
+# hungry = 4
+# vitality = 4
 
-btnA = document.getElementById 'buttonA'
-btnA.onclick = ->
-	if monster.eatingDots
-		ctx.clearRect 0, 0, 200, 200
-		seen = "eat";
+# # 待機状態にする
+# seen = "wait";
+
+# # ドットを描く関数
+# drawing = (dots) ->
+# 	len = dots.length
+# 	ctx.clearRect baseX, baseY, (10+1)*len, (10+1)*len
+# 	x = baseX
+# 	y = baseY
+# 	for i in [0...len]
+# 		for j in [0...len]
+# 			ctx.fillRect x, y, 10, 10 if dots[i][j] is 1
+# 			x += 11
+# 		x = baseX
+# 		y += 11
+
+
+# # モンスターを作る
+# monster = new Digitama
+
+# btnA = document.getElementById 'buttonA'
+# btnA.onclick = ->
+# 	if monster.eatingDots
+# 		ctx.clearRect 0, 0, 200, 200
+# 		seen = "eat";
 	
-frame = 0;
-setInterval ->
-	switch seen
-		when "wait"
-			baseX = 0
-			baseY = 0
-			drawing monster.waitingDots[frame%2]
-		when "eat"
-			baseX = 0
-			baseY = 88
-			drawing meet[frame%3]
-			baseX = 88
-			baseY = 0
-			drawing monster.eatingDots[frame%2]
-	frame++
-, 800
+# frame = 0;
+# setInterval ->
+# 	switch seen
+# 		when "wait"
+# 			baseX = 0
+# 			baseY = 0
+# 			drawing monster.waitingDots[frame%2]
+# 		when "eat"
+# 			baseX = 0
+# 			baseY = 88
+# 			drawing meet[frame%3]
+# 			baseX = 88
+# 			baseY = 0
+# 			drawing monster.eatingDots[frame%2]
+# 	frame++
+# , 800
 
-# 一定時間が経ったら進化する
-setTimeout ->
-	monster = new Zurumon
-, 4950
+# # 一定時間が経ったら進化する
+# setTimeout ->
+# 	monster = new Zurumon
+# , 4950
 
-###
