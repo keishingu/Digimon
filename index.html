@@ -1,61 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Digimon v2</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(135deg, #0f172a, #1e293b 55%, #334155);
-        color: #e2e8f0;
-      }
-      main {
-        width: min(720px, calc(100vw - 32px));
-        padding: 32px;
-        border-radius: 24px;
-        background: rgba(15, 23, 42, 0.72);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-        backdrop-filter: blur(12px);
-      }
-      h1 {
-        margin: 0 0 12px;
-        font-size: clamp(2rem, 4vw, 3rem);
-      }
-      p {
-        line-height: 1.7;
-        color: #cbd5e1;
-      }
-      .pill {
-        display: inline-block;
-        margin-bottom: 16px;
-        padding: 6px 12px;
-        border-radius: 999px;
-        background: #22c55e22;
-        color: #86efac;
-        font-size: 14px;
-      }
-      code {
-        color: #f8fafc;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <div class="pill">GitHub Pages / v2 branch</div>
-      <h1>Digimon v2</h1>
-      <p id="app">Loading Dart…</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DIGITAL MONSTER v2</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-shell">
+    <div id="status-bar">
+      <span class="badge">v2 / Dart bridge</span>
+      <span id="dart-status">Loading Dart…</span>
+    </div>
+
+    <div id="main">
+      <div id="jail">
+        <div id="monitor">
+          <canvas id="sample" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <div id="buttons">
+        <button id="buttonA" type="button" aria-label="Action A"></button>
+        <button id="buttonB" type="button" aria-label="Action B"></button>
+        <button id="buttonC" type="button" aria-label="Action C"></button>
+      </div>
+    </div>
+
+    <div id="dart-panel">
       <p>
-        このブランチは Dart 雛形。ここから旧 Digimon の挙動を段階的に移植していく。
+        旧 JS の描画は維持しつつ、Dart から UI 状態を触れるようにした最初の一歩やで。
       </p>
-      <script defer src="main.dart.js"></script>
-    </main>
-  </body>
+      <div class="actions">
+        <button id="dart-feed" class="secondary" type="button">Dartから Feed 表示</button>
+        <button id="dart-toggle" class="secondary" type="button">Dart表示 ON/OFF</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script defer src="main.dart.js"></script>
+</body>
 </html>

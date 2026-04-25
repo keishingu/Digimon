@@ -104,6 +104,15 @@
 
   monster = new Zurumon;
 
+  window.digimonApp = {
+    showFeed: function() {
+      return monster.eat(meet);
+    },
+    getMonsterName: function() {
+      return monster.name;
+    }
+  };
+
   monster.eat(meet);
 
   /*
