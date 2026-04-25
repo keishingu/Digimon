@@ -172,6 +172,25 @@
         mode: monsterState.mode,
         lastAction: monsterState.lastAction
       };
+    },
+    setState: function(nextState) {
+      if (nextState.stage != null) {
+        monsterState.stage = nextState.stage;
+      }
+      if (nextState.hunger != null) {
+        monsterState.hunger = nextState.hunger;
+      }
+      if (nextState.vitality != null) {
+        monsterState.vitality = nextState.vitality;
+      }
+      if (nextState.mode != null) {
+        currentMode = nextState.mode;
+        monsterState.mode = nextState.mode;
+      }
+      if (nextState.lastAction != null) {
+        monsterState.lastAction = nextState.lastAction;
+      }
+      return monsterState;
     }
   };
 
