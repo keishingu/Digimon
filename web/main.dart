@@ -19,6 +19,78 @@ class MonsterState {
   int actionCount;
 }
 
+const List<List<List<int>>> meetDots = [
+  [
+    [0, 1, 1, 1, 0, 0, 0, 0],
+    [1, 1, 1, 0, 1, 0, 0, 0],
+    [1, 1, 1, 1, 0, 1, 0, 0],
+    [1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 1, 1, 1, 0, 1, 0, 0],
+    [0, 0, 1, 1, 1, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 0],
+  ],
+  [
+    [0, 1, 1, 0, 0, 0, 0, 0],
+    [1, 0, 1, 1, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 0, 0],
+    [0, 1, 1, 1, 1, 1, 0, 0],
+    [0, 1, 1, 1, 0, 1, 0, 0],
+    [0, 0, 1, 1, 1, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 0],
+  ],
+  [
+    [0, 1, 1, 0, 0, 0, 0, 0],
+    [1, 0, 1, 0, 0, 0, 0, 0],
+    [1, 1, 0, 1, 0, 0, 0, 0],
+    [0, 0, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 1, 1, 0],
+  ],
+];
+
+const List<List<List<int>>> zurumonEatingDots = [
+  [
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+  [
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+];
+
 const List<List<List<int>>> digitamaWaitingDots = [
   [
     [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
@@ -84,6 +156,7 @@ void main() {
   );
 
   int waitingFrame = 0;
+  int feedFrame = 0;
 
   Object? digimonApp() => js_util.getProperty<Object?>(window, 'digimonApp');
 
@@ -103,6 +176,14 @@ void main() {
     ctx.clearRect(0, 0, 200, 200);
     drawDots(digitamaWaitingDots[waitingFrame % digitamaWaitingDots.length]);
     waitingFrame += 1;
+  }
+
+  void renderFeedFrame() {
+    if (ctx == null) return;
+    ctx.clearRect(0, 0, 200, 200);
+    drawDots(meetDots[feedFrame % meetDots.length], startX: 0, startY: 88);
+    drawDots(zurumonEatingDots[feedFrame % zurumonEatingDots.length], startX: 66, startY: 0);
+    feedFrame += 1;
   }
 
   void syncToJs() {
@@ -146,6 +227,7 @@ void main() {
         current.hunger = current.hunger > 0 ? current.hunger - 1 : 0;
         current.lastAction = 'feed';
         current.actionCount += 1;
+        renderFeedFrame();
         break;
       case 'wait':
         current.mode = 'wait';
@@ -171,7 +253,7 @@ void main() {
   void callApp(String method, String action, String message) {
     final app = digimonApp();
     if (app != null) {
-      if (action != 'wait') {
+      if (action == 'shout') {
         js_util.callMethod(app, method, []);
       }
       applyAction(action, message);
@@ -188,9 +270,9 @@ void main() {
   legacyWait?.title = 'Wait (Dart renderer)';
   legacyShout?.title = 'Shout';
 
-  feedButton?.onClick.listen((_) => callApp('showFeed', 'feed', 'Dart triggered feed animation 🍖'));
+  feedButton?.onClick.listen((_) => applyAction('feed', 'Dart triggered feed animation 🍖'));
 
-  legacyFeed?.onClick.listen((_) => callApp('showFeed', 'feed', 'Legacy button A / Feed'));
+  legacyFeed?.onClick.listen((_) => applyAction('feed', 'Legacy button A / Feed (Dart render)'));
   legacyWait?.onClick.listen((_) => applyAction('wait', 'Legacy button B / Wait (Dart render)'));
   legacyShout?.onClick.listen((_) => callApp('showShout', 'shout', 'Legacy button C / Shout'));
 

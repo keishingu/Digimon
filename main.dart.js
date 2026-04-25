@@ -4075,13 +4075,13 @@
       vitality = t2.querySelector("#stat-vitality");
       mode = t2.querySelector("#stat-mode");
       current = new A.MonsterState("Digitama", 4, 4, "idle", "spawn", 0);
-      t1.waitingFrame = 0;
+      t1.feedFrame = t1.waitingFrame = 0;
       t2 = new A.main_digimonApp();
-      t3 = new A.main_renderWaitingFrame(t1, ctx, new A.main_drawDots(ctx));
-      t4 = new A.main_syncToJs(t2, current);
-      t5 = new A.main_renderState(stage, current, hunger, vitality, mode, $status);
-      t6 = new A.main_applyAction(current, t3, new A.main_updateEvolution(current), t4, t5);
-      t2 = new A.main_callApp(t2, t6, $status);
+      t3 = new A.main_drawDots(ctx);
+      t4 = new A.main_renderWaitingFrame(t1, ctx, t3);
+      t5 = new A.main_syncToJs(t2, current);
+      t6 = new A.main_renderState(stage, current, hunger, vitality, mode, $status);
+      t3 = new A.main_applyAction(current, new A.main_renderFeedFrame(t1, ctx, t3), t4, new A.main_updateEvolution(current), t5, t6);
       t7 = legacyFeed == null;
       if (!t7)
         B.ButtonElement_methods.set$text(legacyFeed, "A");
@@ -4099,28 +4099,28 @@
         B.ButtonElement_methods.set$title(legacyShout, "Shout");
       if (feedButton != null) {
         t10 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(feedButton, _s5_, t10._eval$1("~(1)?")._as(new A.main_closure(t2)), false, t10._precomputed1);
+        A._EventStreamSubscription$(feedButton, _s5_, t10._eval$1("~(1)?")._as(new A.main_closure(t3)), false, t10._precomputed1);
       }
       if (!t7) {
         t7 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(legacyFeed, _s5_, t7._eval$1("~(1)?")._as(new A.main_closure0(t2)), false, t7._precomputed1);
+        A._EventStreamSubscription$(legacyFeed, _s5_, t7._eval$1("~(1)?")._as(new A.main_closure0(t3)), false, t7._precomputed1);
       }
       if (!t8) {
         t7 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(legacyWait, _s5_, t7._eval$1("~(1)?")._as(new A.main_closure1(t6)), false, t7._precomputed1);
+        A._EventStreamSubscription$(legacyWait, _s5_, t7._eval$1("~(1)?")._as(new A.main_closure1(t3)), false, t7._precomputed1);
       }
       if (!t9) {
-        t6 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(legacyShout, _s5_, t6._eval$1("~(1)?")._as(new A.main_closure2(t2)), false, t6._precomputed1);
+        t7 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(legacyShout, _s5_, t7._eval$1("~(1)?")._as(new A.main_closure2(new A.main_callApp(t2, t3, $status))), false, t7._precomputed1);
       }
       t1.panelVisible = true;
       if (toggleButton != null) {
         t2 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(toggleButton, _s5_, t2._eval$1("~(1)?")._as(new A.main_closure3(t1, panel, toggleButton, t5)), false, t2._precomputed1);
+        A._EventStreamSubscription$(toggleButton, _s5_, t2._eval$1("~(1)?")._as(new A.main_closure3(t1, panel, toggleButton, t6)), false, t2._precomputed1);
       }
+      t5.call$0();
       t4.call$0();
-      t3.call$0();
-      t5.call$1("Dart ready \u2705");
+      t6.call$1("Dart ready \u2705");
     },
     MonsterState: function MonsterState(t0, t1, t2, t3, t4, t5) {
       var _ = this;
@@ -4141,6 +4141,11 @@
       this.ctx = t1;
       this.drawDots = t2;
     },
+    main_renderFeedFrame: function main_renderFeedFrame(t0, t1, t2) {
+      this._box_0 = t0;
+      this.ctx = t1;
+      this.drawDots = t2;
+    },
     main_syncToJs: function main_syncToJs(t0, t1) {
       this.digimonApp = t0;
       this.current = t1;
@@ -4157,13 +4162,14 @@
       _.mode = t4;
       _.status = t5;
     },
-    main_applyAction: function main_applyAction(t0, t1, t2, t3, t4) {
+    main_applyAction: function main_applyAction(t0, t1, t2, t3, t4, t5) {
       var _ = this;
       _.current = t0;
-      _.renderWaitingFrame = t1;
-      _.updateEvolution = t2;
-      _.syncToJs = t3;
-      _.renderState = t4;
+      _.renderFeedFrame = t1;
+      _.renderWaitingFrame = t2;
+      _.updateEvolution = t3;
+      _.syncToJs = t4;
+      _.renderState = t5;
     },
     main_callApp: function main_callApp(t0, t1, t2) {
       this.digimonApp = t0;
@@ -4171,10 +4177,10 @@
       this.status = t2;
     },
     main_closure: function main_closure(t0) {
-      this.callApp = t0;
+      this.applyAction = t0;
     },
     main_closure0: function main_closure0(t0) {
-      this.callApp = t0;
+      this.applyAction = t0;
     },
     main_closure1: function main_closure1(t0) {
       this.applyAction = t0;
@@ -7272,15 +7278,15 @@
   };
   A.main_drawDots.prototype = {
     call$3$startX$startY(dots, startX, startY) {
-      var t1, y, t2, x;
+      var t1, t2, y, t3, x, t4;
       type$.List_List_int._as(dots);
       t1 = this.ctx;
       if (t1 == null)
         return;
-      for (y = 0; y < 16; ++y)
-        for (t2 = startY + y * 11, x = 0; x < 16; ++x)
-          if (dots[y][x] === 1)
-            t1.fillRect(startX + x * 11, t2, 10, 10);
+      for (t2 = dots.length, y = 0; y < t2; ++y)
+        for (t3 = startY + y * 11, x = 0; t4 = dots[y], x < t4.length; ++x)
+          if (t4[x] === 1)
+            t1.fillRect(startX + x * 11, t3, 10, 10);
     },
     call$1(dots) {
       return this.call$3$startX$startY(dots, 0, 0);
@@ -7296,6 +7302,21 @@
       t1 = this._box_0;
       this.drawDots.call$1(B.List_EVh[B.JSInt_methods.$mod(t1.waitingFrame, 2)]);
       ++t1.waitingFrame;
+    },
+    $signature: 0
+  };
+  A.main_renderFeedFrame.prototype = {
+    call$0() {
+      var t2,
+        t1 = this.ctx;
+      if (t1 == null)
+        return;
+      t1.clearRect(0, 0, 200, 200);
+      t1 = this.drawDots;
+      t2 = this._box_0;
+      t1.call$3$startX$startY(B.List_usI[B.JSInt_methods.$mod(t2.feedFrame, 3)], 0, 88);
+      t1.call$3$startX$startY(B.List_hPS[B.JSInt_methods.$mod(t2.feedFrame, 2)], 66, 0);
+      ++t2.feedFrame;
     },
     $signature: 0
   };
@@ -7357,6 +7378,7 @@
           t1.hunger = t2 > 0 ? t2 - 1 : 0;
           t1.lastAction = "feed";
           ++t1.actionCount;
+          _this.renderFeedFrame.call$0();
           break;
         case "wait":
           t1 = _this.current;
@@ -7389,7 +7411,7 @@
       var t1,
         app = this.digimonApp.call$0();
       if (app != null) {
-        if (action !== "wait")
+        if (action === "shout")
           app[method]();
         this.applyAction.call$2(action, message);
       } else {
@@ -7403,14 +7425,14 @@
   A.main_closure.prototype = {
     call$1(__wc0_formal) {
       type$.MouseEvent._as(__wc0_formal);
-      return this.callApp.call$3("showFeed", "feed", "Dart triggered feed animation \ud83c\udf56");
+      return this.applyAction.call$2("feed", "Dart triggered feed animation \ud83c\udf56");
     },
     $signature: 1
   };
   A.main_closure0.prototype = {
     call$1(__wc1_formal) {
       type$.MouseEvent._as(__wc1_formal);
-      return this.callApp.call$3("showFeed", "feed", "Legacy button A / Feed");
+      return this.applyAction.call$2("feed", "Legacy button A / Feed (Dart render)");
     },
     $signature: 1
   };
@@ -7489,7 +7511,7 @@
     _inheritMany(A.NativeTypedArrayOfDouble, [A.NativeFloat32List, A.NativeFloat64List]);
     _inheritMany(A.NativeTypedArrayOfInt, [A.NativeInt16List, A.NativeInt32List, A.NativeInt8List, A.NativeUint16List, A.NativeUint32List, A.NativeUint8ClampedList, A.NativeUint8List]);
     _inherit(A._TypeError, A._Error);
-    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__asyncCompleteErrorObject_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._RootZone_bindCallbackGuarded_closure, A._rootHandleError_closure, A.main_digimonApp, A.main_renderWaitingFrame, A.main_syncToJs, A.main_updateEvolution]);
+    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__asyncCompleteErrorObject_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._RootZone_bindCallbackGuarded_closure, A._rootHandleError_closure, A.main_digimonApp, A.main_renderWaitingFrame, A.main_renderFeedFrame, A.main_syncToJs, A.main_updateEvolution]);
     _inherit(A._RootZone, A._Zone);
     _inherit(A._IdentityHashMap, A._HashMap);
     _inheritMany(A.SetBase, [A._SetBase, A.CssClassSetImpl]);
@@ -7641,6 +7663,7 @@
       Int32List: findType("Int32List"),
       Int8List: findType("Int8List"),
       Iterable_dynamic: findType("Iterable<@>"),
+      JSArray_List_List_int: findType("JSArray<List<List<int>>>"),
       JSArray_List_int: findType("JSArray<List<int>>"),
       JSArray_String: findType("JSArray<String>"),
       JSArray_dynamic: findType("JSArray<@>"),
@@ -7865,7 +7888,40 @@
     B.List_GjU = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
     B.List_fqn = makeConstList([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
     B.List_StX = makeConstList([B.List_wBs, B.List_mpG, B.List_wgg, B.List_SHY, B.List_sKA, B.List_ZVW, B.List_4pv, B.List_7Gb, B.List_7Gb, B.List_Na7, B.List_GjU, B.List_fqn, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq], type$.JSArray_List_int);
-    B.List_EVh = makeConstList([B.List_BPv, B.List_StX], A.findType("JSArray<List<List<int>>>"));
+    B.List_EVh = makeConstList([B.List_BPv, B.List_StX], type$.JSArray_List_List_int);
+    B.List_ERz = makeConstList([0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_XZ0 = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_PfX = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_HCb = makeConstList([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_Fbm = makeConstList([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_2xM = makeConstList([0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_NtX = makeConstList([B.List_o0N, B.List_ERz, B.List_XZ0, B.List_PfX, B.List_HCb, B.List_Fbm, B.List_2xM, B.List_2qw, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq], type$.JSArray_List_int);
+    B.List_Dza = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_LFl = makeConstList([0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_v5s = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_Dqn = makeConstList([0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_rVt = makeConstList([B.List_Dza, B.List_LFl, B.List_v5s, B.List_Dqn, B.List_XZ0, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq], type$.JSArray_List_int);
+    B.List_hPS = makeConstList([B.List_NtX, B.List_rVt], type$.JSArray_List_List_int);
+    B.List_95X = makeConstList([0, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_xut = makeConstList([1, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_o19 = makeConstList([1, 1, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_zsA = makeConstList([1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_dhF = makeConstList([0, 1, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_CGb = makeConstList([0, 0, 1, 1, 1, 0, 1, 1], type$.JSArray_int);
+    B.List_dFs = makeConstList([0, 0, 0, 0, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_Qqq = makeConstList([0, 0, 0, 0, 0, 1, 1, 0], type$.JSArray_int);
+    B.List_xa6 = makeConstList([B.List_95X, B.List_xut, B.List_o19, B.List_zsA, B.List_dhF, B.List_CGb, B.List_dFs, B.List_Qqq], type$.JSArray_List_int);
+    B.List_b0J = makeConstList([0, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_fEo = makeConstList([1, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_yiJ = makeConstList([0, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_KMl = makeConstList([B.List_b0J, B.List_fEo, B.List_zsA, B.List_yiJ, B.List_dhF, B.List_CGb, B.List_dFs, B.List_Qqq], type$.JSArray_List_int);
+    B.List_D1D = makeConstList([1, 0, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_g1J = makeConstList([1, 1, 0, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_iMO = makeConstList([0, 0, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_0wZ = makeConstList([0, 0, 0, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_WfN = makeConstList([0, 0, 0, 0, 1, 0, 1, 1], type$.JSArray_int);
+    B.List_6Fg = makeConstList([B.List_b0J, B.List_D1D, B.List_g1J, B.List_iMO, B.List_0wZ, B.List_WfN, B.List_dFs, B.List_Qqq], type$.JSArray_List_int);
+    B.List_usI = makeConstList([B.List_xa6, B.List_KMl, B.List_6Fg], type$.JSArray_List_List_int);
     B.Type_ByteBuffer_rqD = A.typeLiteral("ByteBuffer");
     B.Type_ByteData_9dB = A.typeLiteral("ByteData");
     B.Type_Float32List_9Kz = A.typeLiteral("Float32List");
