@@ -175,3 +175,17 @@ button:active {
         transform-origin: top center;
     }
 }
+
+#debug-panel {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #cbd5e1;
+}
+
+.debug-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+}

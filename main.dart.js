@@ -3554,13 +3554,17 @@
       return "" + seconds + "\u79d2";
     },
     main() {
-      var ctx, stageLabel, hunger, vitality, mode, now, current, t4,
+      var ctx, stageLabel, hunger, vitality, mode, initialStart, current, t4, t5,
         _s10_ = "\u4eca\u56de\u306f\u89b3\u5bdf\u30e2\u30fc\u30c9\u3067\u3059",
-        t1 = {},
+        _s5_ = "click", t1 = {},
         t2 = document,
         $status = t2.querySelector("#dart-status"),
         t3 = type$.nullable_ButtonElement,
         toggleButton = t3._as(t2.querySelector("#dart-toggle")),
+        plus10s = t3._as(t2.querySelector("#debug-plus-10s")),
+        plus10m = t3._as(t2.querySelector("#debug-plus-10m")),
+        plus6h = t3._as(t2.querySelector("#debug-plus-6h")),
+        resetTime = t3._as(t2.querySelector("#debug-reset-time")),
         legacyFeed = t3._as(t2.querySelector("#buttonA")),
         legacyWait = t3._as(t2.querySelector("#buttonB")),
         legacyShout = t3._as(t2.querySelector("#buttonC")),
@@ -3577,11 +3581,12 @@
       hunger = t2.querySelector("#stat-hunger");
       vitality = t2.querySelector("#stat-vitality");
       mode = t2.querySelector("#stat-mode");
-      now = new A.DateTime(Date.now(), 0, false);
-      current = new A.MonsterState(B.JSArray_methods.get$first(B.List_zb2).stage, now, now._addMicroseconds$1(10000000), "\u8a95\u751f\u3057\u307e\u3057\u305f");
+      initialStart = new A.DateTime(Date.now(), 0, false);
+      current = new A.MonsterState(B.JSArray_methods.get$first(B.List_zb2).stage, initialStart, initialStart._addMicroseconds$1(10000000), "\u8a95\u751f\u3057\u307e\u3057\u305f");
       t1.frame = 0;
       t2 = new A.main_renderCurrentFrame(t1, ctx, current, new A.main_drawSprite(ctx));
       t3 = new A.main_renderState(new A.main_updateStageByTime(current), current, stageLabel, hunger, vitality, mode, $status);
+      t4 = new A.main_skipTime(current, t3, t2);
       if (legacyFeed != null) {
         B.ButtonElement_methods.set$text(legacyFeed, "A");
         legacyFeed.disabled = true;
@@ -3599,10 +3604,26 @@
       }
       t1.panelVisible = true;
       if (toggleButton != null) {
-        t4 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(toggleButton, "click", t4._eval$1("~(1)?")._as(new A.main_closure(t1, panel, toggleButton, t3)), false, t4._precomputed1);
+        t5 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(toggleButton, _s5_, t5._eval$1("~(1)?")._as(new A.main_closure(t1, panel, toggleButton, t3)), false, t5._precomputed1);
       }
-      A.Timer_Timer$periodic(B.Duration_1000000, new A.main_closure0(t3, t2));
+      if (plus10s != null) {
+        t1 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(plus10s, _s5_, t1._eval$1("~(1)?")._as(new A.main_closure0(t4)), false, t1._precomputed1);
+      }
+      if (plus10m != null) {
+        t1 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(plus10m, _s5_, t1._eval$1("~(1)?")._as(new A.main_closure1(t4)), false, t1._precomputed1);
+      }
+      if (plus6h != null) {
+        t1 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(plus6h, _s5_, t1._eval$1("~(1)?")._as(new A.main_closure2(t4)), false, t1._precomputed1);
+      }
+      if (resetTime != null) {
+        t1 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(resetTime, _s5_, t1._eval$1("~(1)?")._as(new A.main_closure3(current, t3, t2)), false, t1._precomputed1);
+      }
+      A.Timer_Timer$periodic(B.Duration_1000000, new A.main_closure4(t3, t2));
       t3.call$1("\u89b3\u5bdf\u3092\u958b\u59cb\u3057\u307e\u3057\u305f");
       t2.call$0();
     },
@@ -3640,6 +3661,11 @@
       _.mode = t5;
       _.status = t6;
     },
+    main_skipTime: function main_skipTime(t0, t1, t2) {
+      this.current = t0;
+      this.renderState = t1;
+      this.renderCurrentFrame = t2;
+    },
     main_closure: function main_closure(t0, t1, t2, t3) {
       var _ = this;
       _._box_0 = t0;
@@ -3647,7 +3673,21 @@
       _.toggleButton = t2;
       _.renderState = t3;
     },
-    main_closure0: function main_closure0(t0, t1) {
+    main_closure0: function main_closure0(t0) {
+      this.skipTime = t0;
+    },
+    main_closure1: function main_closure1(t0) {
+      this.skipTime = t0;
+    },
+    main_closure2: function main_closure2(t0) {
+      this.skipTime = t0;
+    },
+    main_closure3: function main_closure3(t0, t1, t2) {
+      this.current = t0;
+      this.renderState = t1;
+      this.renderCurrentFrame = t2;
+    },
+    main_closure4: function main_closure4(t0, t1) {
       this.renderState = t0;
       this.renderCurrentFrame = t1;
     },
@@ -4082,19 +4122,19 @@
     call$1(o) {
       return this.getTag(o);
     },
-    $signature: 4
+    $signature: 5
   };
   A.initHooks_closure0.prototype = {
     call$2(o, tag) {
       return this.getUnknownTag(o, tag);
     },
-    $signature: 5
+    $signature: 6
   };
   A.initHooks_closure1.prototype = {
     call$1(tag) {
       return this.prototypeForTag(A._asString(tag));
     },
-    $signature: 6
+    $signature: 7
   };
   A.JSSyntaxRegExp.prototype = {
     toString$0(_) {
@@ -4128,7 +4168,7 @@
       t1.storedCallback = null;
       f.call$0();
     },
-    $signature: 3
+    $signature: 4
   };
   A._AsyncRun__initializeScheduleImmediate_closure.prototype = {
     call$1(callback) {
@@ -4138,19 +4178,19 @@
       t2 = this.span;
       t1.firstChild ? t1.removeChild(t2) : t1.appendChild(t2);
     },
-    $signature: 7
+    $signature: 8
   };
   A._AsyncRun__scheduleImmediateJsOverride_internalCallback.prototype = {
     call$0() {
       this.callback.call$0();
     },
-    $signature: 1
+    $signature: 2
   };
   A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback.prototype = {
     call$0() {
       this.callback.call$0();
     },
-    $signature: 1
+    $signature: 2
   };
   A._TimerImpl.prototype = {
     _TimerImpl$2(milliseconds, callback) {
@@ -4188,7 +4228,7 @@
       t1._tick = tick;
       _this.callback.call$1(t1);
     },
-    $signature: 1
+    $signature: 2
   };
   A.AsyncError.prototype = {
     toString$0(_) {
@@ -4403,7 +4443,7 @@
     call$1(__wc0_formal) {
       this.joinedResult._completeWithResultOf$1(this.originalSource);
     },
-    $signature: 3
+    $signature: 4
   };
   A._Future__propagateToListeners_handleWhenCompleteCallback_closure0.prototype = {
     call$2(e, s) {
@@ -4411,7 +4451,7 @@
       type$.StackTrace._as(s);
       this.joinedResult._completeErrorObject$1(new A.AsyncError(e, s));
     },
-    $signature: 8
+    $signature: 9
   };
   A._Future__propagateToListeners_handleValueCallback.prototype = {
     call$0() {
@@ -5151,7 +5191,7 @@
     call$1(e) {
       return this.onData.call$1(type$.Event._as(e));
     },
-    $signature: 9
+    $signature: 10
   };
   A.ImmutableListMixin.prototype = {
     get$iterator(receiver) {
@@ -5252,7 +5292,7 @@
     call$1(dots) {
       return this.call$3$offsetX$offsetY(dots, 0, 0);
     },
-    $signature: 10
+    $signature: 11
   };
   A.main_renderCurrentFrame.prototype = {
     call$0() {
@@ -5300,18 +5340,18 @@
   };
   A.main_updateStageByTime.prototype = {
     call$0() {
-      var t3, i, t4, nextIndex,
-        t1 = this.current,
-        t2 = t1.startedAt;
-      for (t3 = new A.DateTime(Date.now(), 0, false).difference$1(t2)._duration, i = 5; i >= 0; --i) {
-        t4 = B.List_zb2[i];
-        if (t3 >= t4.elapsed._duration) {
-          t3 = t4.stage;
-          if (t1.stage !== t3) {
-            t1.stage = t3;
-            t1.lastEvent = t3 + "\u306b\u9032\u5316\u3057\u307e\u3057\u305f";
+      var t2, i, t3, nextIndex,
+        t1 = this.current;
+      for (t2 = new A.DateTime(Date.now(), 0, false).difference$1(t1.startedAt)._duration, i = 5; i >= 0; --i) {
+        t3 = B.List_zb2[i];
+        if (t2 >= t3.elapsed._duration) {
+          t2 = t3.stage;
+          if (t1.stage !== t2) {
+            t1.stage = t2;
+            t1.lastEvent = t2 + "\u306b\u9032\u5316\u3057\u307e\u3057\u305f";
           }
           nextIndex = i + 1;
+          t2 = t1.startedAt;
           if (nextIndex < 6)
             t1.nextEvolutionAt = t2._addMicroseconds$1(B.List_zb2[nextIndex].elapsed._duration);
           else
@@ -5324,8 +5364,7 @@
   };
   A.main_renderState.prototype = {
     call$1(prefix) {
-      var t1, remaining, t2, t3, _this = this,
-        _s11_ = "\u6700\u7d42\u6bb5\u968e\u306b\u5230\u9054\u3057\u307e\u3057\u305f";
+      var t1, remaining, t2, summary, _this = this;
       _this.updateStageByTime.call$0();
       t1 = _this.current;
       remaining = t1.nextEvolutionAt.difference$1(new A.DateTime(Date.now(), 0, false));
@@ -5341,23 +5380,27 @@
       t2 = _this.mode;
       if (t2 != null)
         J.set$text$x(t2, t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? "\u6700\u7d42\u6bb5\u968e" : A.formatRemaining(remaining));
+      summary = t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? "\u6700\u7d42\u6bb5\u968e\u306b\u5230\u9054\u3057\u307e\u3057\u305f" : "\u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining);
       t2 = _this.status;
-      if (t2 != null) {
-        if (prefix == null) {
-          t3 = t1.lastEvent;
-          t1 = t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? _s11_ : "\u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining);
-          t1 = t3 + " / " + t1;
-        } else {
-          t1 = t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? _s11_ : "\u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining);
-          t1 = prefix + " / " + t1;
-        }
-        J.set$text$x(t2, t1);
-      }
+      if (t2 != null)
+        J.set$text$x(t2, prefix == null ? t1.lastEvent + " / " + summary : prefix + " / " + summary);
     },
     call$0() {
       return this.call$1(null);
     },
-    $signature: 11
+    $signature: 12
+  };
+  A.main_skipTime.prototype = {
+    call$2(delta, label) {
+      var t2,
+        t1 = this.current;
+      t1.startedAt = t1.startedAt._addMicroseconds$1(0 - delta._duration);
+      t2 = label + " \u6642\u9593\u3092\u9032\u3081\u307e\u3057\u305f";
+      t1.lastEvent = t2;
+      this.renderState.call$1(t2);
+      this.renderCurrentFrame.call$0();
+    },
+    $signature: 13
   };
   A.main_closure.prototype = {
     call$1(__wc0_formal) {
@@ -5373,15 +5416,50 @@
       t1 = t1.panelVisible ? "\u60c5\u5831\u3092\u8868\u793a\u3057\u3066\u3044\u307e\u3059" : "\u60c5\u5831\u3092\u975e\u8868\u793a\u306b\u3057\u307e\u3057\u305f";
       _this.renderState.call$1(t1);
     },
-    $signature: 12
+    $signature: 1
   };
   A.main_closure0.prototype = {
     call$1(__wc1_formal) {
-      type$.Timer._as(__wc1_formal);
+      type$.MouseEvent._as(__wc1_formal);
+      return this.skipTime.call$2(B.Duration_10000000, "+10\u79d2");
+    },
+    $signature: 1
+  };
+  A.main_closure1.prototype = {
+    call$1(__wc2_formal) {
+      type$.MouseEvent._as(__wc2_formal);
+      return this.skipTime.call$2(B.Duration_600000000, "+10\u5206");
+    },
+    $signature: 1
+  };
+  A.main_closure2.prototype = {
+    call$1(__wc3_formal) {
+      type$.MouseEvent._as(__wc3_formal);
+      return this.skipTime.call$2(B.Duration_21600000000, "+6\u6642\u9593");
+    },
+    $signature: 1
+  };
+  A.main_closure3.prototype = {
+    call$1(__wc4_formal) {
+      var t1,
+        _s11_ = "\u6642\u9593\u3092\u30ea\u30bb\u30c3\u30c8\u3057\u307e\u3057\u305f";
+      type$.MouseEvent._as(__wc4_formal);
+      t1 = this.current;
+      t1.startedAt = new A.DateTime(Date.now(), 0, false);
+      t1.stage = B.JSArray_methods.get$first(B.List_zb2).stage;
+      t1.lastEvent = _s11_;
+      this.renderState.call$1(_s11_);
+      this.renderCurrentFrame.call$0();
+    },
+    $signature: 1
+  };
+  A.main_closure4.prototype = {
+    call$1(__wc5_formal) {
+      type$.Timer._as(__wc5_formal);
       this.renderState.call$0();
       this.renderCurrentFrame.call$0();
     },
-    $signature: 13
+    $signature: 14
   };
   (function aliases() {
     var _ = J.Interceptor.prototype;
@@ -5392,9 +5470,9 @@
   (function installTearOffs() {
     var _static_1 = hunkHelpers._static_1,
       _static_0 = hunkHelpers._static_0;
-    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 2);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 2);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 2);
+    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 3);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 3);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 3);
     _static_0(A, "async___startMicrotaskLoop$closure", "_startMicrotaskLoop", 0);
   })();
   (function inheritance() {
@@ -5411,9 +5489,9 @@
     _inheritMany(J.JSNumber, [J.JSInt, J.JSNumNotInt]);
     _inheritMany(A.Error, [A.LateError, A.TypeError, A.JsNoSuchMethodError, A.UnknownJsTypeError, A.RuntimeError, A._Error, A.AssertionError, A.ArgumentError, A.UnsupportedError, A.UnimplementedError, A.StateError, A.ConcurrentModificationError]);
     _inherit(A.NullError, A.TypeError);
-    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_drawSprite, A.main_renderState, A.main_closure, A.main_closure0]);
+    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_drawSprite, A.main_renderState, A.main_closure, A.main_closure0, A.main_closure1, A.main_closure2, A.main_closure3, A.main_closure4]);
     _inheritMany(A.TearOffClosure, [A.StaticClosure, A.BoundClosure]);
-    _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._Future__propagateToListeners_handleWhenCompleteCallback_closure0]);
+    _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._Future__propagateToListeners_handleWhenCompleteCallback_closure0, A.main_skipTime]);
     _inherit(A._TypeError, A._Error);
     _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._TimerImpl$periodic_closure, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__asyncCompleteErrorObject_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._RootZone_bindCallbackGuarded_closure, A._rootHandleError_closure, A.main_renderCurrentFrame, A.main_updateStageByTime]);
     _inherit(A._RootZone, A._Zone);
@@ -5439,7 +5517,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List", Object: "Object", Map: "Map", JSObject: "JSObject"},
     mangledNames: {},
-    types: ["~()", "Null()", "~(~())", "Null(@)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Event)", "~(List<List<int>>{offsetX:int,offsetY:int})", "~([String?])", "~(MouseEvent)", "~(Timer)"],
+    types: ["~()", "~(MouseEvent)", "Null()", "~(~())", "Null(@)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Event)", "~(List<List<int>>{offsetX:int,offsetY:int})", "~([String?])", "~(Duration,String)", "~(Timer)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti")
@@ -5650,6 +5728,9 @@
     B.C__RootZone = new A._RootZone();
     B.C__StringStackTrace = new A._StringStackTrace();
     B.Duration_1000000 = new A.Duration(1000000);
+    B.Duration_10000000 = new A.Duration(10000000);
+    B.Duration_21600000000 = new A.Duration(216e8);
+    B.Duration_600000000 = new A.Duration(600000000);
     B.List_XMu = makeConstList([0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
     B.List_9B3 = makeConstList([0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0], type$.JSArray_int);
     B.List_PYC = makeConstList([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], type$.JSArray_int);
@@ -5717,7 +5798,6 @@
     B.List_by2 = makeConstList([B.List_v5s, B.List_Ey7, B.List_aea, B.List_LKo, B.List_Uln, B.List_nP5, B.List_u0g, B.List_rUh, B.List_M1V, B.List_rHC, B.List_YXO, B.List_Mil, B.List_Wz9, B.List_Fcv], type$.JSArray_List_int);
     B.Duration_0 = new A.Duration(0);
     B.EvolutionMilestone_Digitama_Duration_0 = new A.EvolutionMilestone("Digitama", B.Duration_0);
-    B.Duration_10000000 = new A.Duration(10000000);
     B.EvolutionMilestone_Zurumon_Duration_10000000 = new A.EvolutionMilestone("Zurumon", B.Duration_10000000);
     B.Duration_610000000 = new A.Duration(610000000);
     B.EvolutionMilestone_Pagumon_Duration_610000000 = new A.EvolutionMilestone("Pagumon", B.Duration_610000000);
