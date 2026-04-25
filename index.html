@@ -31,6 +31,24 @@
       <p>
         旧 JS の描画は維持しつつ、Dart から UI 状態を触れるようにした最初の一歩やで。
       </p>
+      <div id="status-cards">
+        <div class="status-card">
+          <span class="label">成長段階</span>
+          <strong id="stat-stage">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">空腹度</span>
+          <strong id="stat-hunger">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">体力</span>
+          <strong id="stat-vitality">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">状態</span>
+          <strong id="stat-mode">-</strong>
+        </div>
+      </div>
       <div class="actions">
         <button id="dart-feed" class="secondary" type="button">Dartから Feed 表示</button>
         <button id="dart-toggle" class="secondary" type="button">Dart表示 ON/OFF</button>

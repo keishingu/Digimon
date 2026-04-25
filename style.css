@@ -110,6 +110,31 @@ button:active {
     line-height: 1.6;
 }
 
+#status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.status-card {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+}
+
+.status-card .label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.status-card strong {
+    font-size: 18px;
+}
+
 .actions {
     display: flex;
     gap: 10px;
