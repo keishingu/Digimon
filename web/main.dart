@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:html';
 import 'dart:js_util' as js_util;
 
@@ -20,6 +19,45 @@ class MonsterState {
   int actionCount;
 }
 
+const List<List<List<int>>> digitamaWaitingDots = [
+  [
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+    [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+  [
+    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ],
+];
+
 void main() {
   final status = querySelector('#dart-status');
   final feedButton = querySelector('#dart-feed') as ButtonElement?;
@@ -28,6 +66,8 @@ void main() {
   final legacyWait = querySelector('#buttonB') as ButtonElement?;
   final legacyShout = querySelector('#buttonC') as ButtonElement?;
   final panel = querySelector('#dart-panel');
+  final canvas = querySelector('#sample') as CanvasElement?;
+  final ctx = canvas?.context2D;
 
   final stage = querySelector('#stat-stage');
   final hunger = querySelector('#stat-hunger');
@@ -43,7 +83,27 @@ void main() {
     actionCount: 0,
   );
 
+  int waitingFrame = 0;
+
   Object? digimonApp() => js_util.getProperty<Object?>(window, 'digimonApp');
+
+  void drawDots(List<List<int>> dots, {int startX = 0, int startY = 0}) {
+    if (ctx == null) return;
+    for (var y = 0; y < dots.length; y++) {
+      for (var x = 0; x < dots[y].length; x++) {
+        if (dots[y][x] == 1) {
+          ctx.fillRect(startX + x * 11, startY + y * 11, 10, 10);
+        }
+      }
+    }
+  }
+
+  void renderWaitingFrame() {
+    if (ctx == null) return;
+    ctx.clearRect(0, 0, 200, 200);
+    drawDots(digitamaWaitingDots[waitingFrame % digitamaWaitingDots.length]);
+    waitingFrame += 1;
+  }
 
   void syncToJs() {
     final app = digimonApp();
@@ -93,6 +153,7 @@ void main() {
         current.vitality = current.vitality > 0 ? current.vitality - 1 : 0;
         current.lastAction = 'wait';
         current.actionCount += 1;
+        renderWaitingFrame();
         break;
       case 'shout':
         current.mode = 'shout';
@@ -110,7 +171,9 @@ void main() {
   void callApp(String method, String action, String message) {
     final app = digimonApp();
     if (app != null) {
-      js_util.callMethod(app, method, []);
+      if (action != 'wait') {
+        js_util.callMethod(app, method, []);
+      }
       applyAction(action, message);
     } else {
       status?.text = 'digimonApp not ready';
@@ -122,14 +185,14 @@ void main() {
   legacyShout?.text = 'C';
 
   legacyFeed?.title = 'Feed';
-  legacyWait?.title = 'Wait';
+  legacyWait?.title = 'Wait (Dart renderer)';
   legacyShout?.title = 'Shout';
 
   feedButton?.onClick.listen((_) => callApp('showFeed', 'feed', 'Dart triggered feed animation 🍖'));
 
-  legacyFeed?.onClick.listen((_) => applyAction('feed', 'Legacy button A / Feed'));
-  legacyWait?.onClick.listen((_) => applyAction('wait', 'Legacy button B / Wait'));
-  legacyShout?.onClick.listen((_) => applyAction('shout', 'Legacy button C / Shout'));
+  legacyFeed?.onClick.listen((_) => callApp('showFeed', 'feed', 'Legacy button A / Feed'));
+  legacyWait?.onClick.listen((_) => applyAction('wait', 'Legacy button B / Wait (Dart render)'));
+  legacyShout?.onClick.listen((_) => callApp('showShout', 'shout', 'Legacy button C / Shout'));
 
   var panelVisible = true;
   toggleButton?.onClick.listen((_) {
@@ -140,5 +203,6 @@ void main() {
   });
 
   syncToJs();
+  renderWaitingFrame();
   renderState('Dart ready ✅');
 }
