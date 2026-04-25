@@ -211,7 +211,7 @@ void main() {
     mode?.text = '${current.mode}';
 
     status?.text = prefix == null
-        ? 'Dart ready ✅ / last: ${current.lastAction}'
+        ? '準備完了 / last: ${current.lastAction}'
         : '$prefix / last: ${current.lastAction}';
   }
 
@@ -253,20 +253,20 @@ void main() {
   legacyWait?.title = 'Wait (Dart renderer)';
   legacyShout?.title = 'Shout (Dart renderer)';
 
-  feedButton?.onClick.listen((_) => applyAction('feed', 'Dart triggered feed animation 🍖'));
+  feedButton?.onClick.listen((_) => applyAction('feed', 'ごはんをあげました'));
 
-  legacyFeed?.onClick.listen((_) => applyAction('feed', 'Legacy button A / Feed (Dart render)'));
-  legacyWait?.onClick.listen((_) => applyAction('wait', 'Legacy button B / Wait (Dart render)'));
-  legacyShout?.onClick.listen((_) => applyAction('shout', 'Legacy button C / Shout (Dart render)'));
+  legacyFeed?.onClick.listen((_) => applyAction('feed', 'ごはんをあげました'));
+  legacyWait?.onClick.listen((_) => applyAction('wait', 'ようすをみています'));
+  legacyShout?.onClick.listen((_) => applyAction('shout', 'げんきを出しました'));
 
   var panelVisible = true;
   toggleButton?.onClick.listen((_) {
     panelVisible = !panelVisible;
     panel?.classes.toggle('collapsed', !panelVisible);
-    toggleButton.text = panelVisible ? 'Dart表示 ON/OFF' : 'Dart表示を戻す';
-    renderState(panelVisible ? 'Dart panel visible' : 'Dart panel hidden');
+    toggleButton.text = panelVisible ? '表示切替' : '表示を戻す';
+    renderState(panelVisible ? '情報を表示しています' : '情報を非表示にしました');
   });
 
   renderWaitingFrame();
-  renderState('Dart ready ✅');
+  renderState('準備完了');
 }

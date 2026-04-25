@@ -3490,7 +3490,7 @@
         A._EventStreamSubscription$(toggleButton, _s5_, t2._eval$1("~(1)?")._as(new A.main_closure3(t1, panel, toggleButton, t4)), false, t2._precomputed1);
       }
       t3.call$0();
-      t4.call$1("Dart ready \u2705");
+      t4.call$1("\u6e96\u5099\u5b8c\u4e86");
     },
     MonsterState: function MonsterState(t0, t1, t2, t3, t4, t5) {
       var _ = this;
@@ -5112,28 +5112,28 @@
   A.main_closure.prototype = {
     call$1(__wc0_formal) {
       type$.MouseEvent._as(__wc0_formal);
-      return this.applyAction.call$2("feed", "Dart triggered feed animation \ud83c\udf56");
+      return this.applyAction.call$2("feed", "\u3054\u306f\u3093\u3092\u3042\u3052\u307e\u3057\u305f");
     },
     $signature: 1
   };
   A.main_closure0.prototype = {
     call$1(__wc1_formal) {
       type$.MouseEvent._as(__wc1_formal);
-      return this.applyAction.call$2("feed", "Legacy button A / Feed (Dart render)");
+      return this.applyAction.call$2("feed", "\u3054\u306f\u3093\u3092\u3042\u3052\u307e\u3057\u305f");
     },
     $signature: 1
   };
   A.main_closure1.prototype = {
     call$1(__wc2_formal) {
       type$.MouseEvent._as(__wc2_formal);
-      return this.applyAction.call$2("wait", "Legacy button B / Wait (Dart render)");
+      return this.applyAction.call$2("wait", "\u3088\u3046\u3059\u3092\u307f\u3066\u3044\u307e\u3059");
     },
     $signature: 1
   };
   A.main_closure2.prototype = {
     call$1(__wc3_formal) {
       type$.MouseEvent._as(__wc3_formal);
-      return this.applyAction.call$2("shout", "Legacy button C / Shout (Dart render)");
+      return this.applyAction.call$2("shout", "\u3052\u3093\u304d\u3092\u51fa\u3057\u307e\u3057\u305f");
     },
     $signature: 1
   };
@@ -5146,9 +5146,9 @@
       t2 = _this.panel;
       if (t2 != null)
         J.get$classes$x(t2).toggle$2(0, "collapsed", !t1.panelVisible);
-      t2 = t1.panelVisible ? "Dart\u8868\u793a ON/OFF" : "Dart\u8868\u793a\u3092\u623b\u3059";
+      t2 = t1.panelVisible ? "\u8868\u793a\u5207\u66ff" : "\u8868\u793a\u3092\u623b\u3059";
       B.ButtonElement_methods.set$text(_this.toggleButton, t2);
-      t1 = t1.panelVisible ? "Dart panel visible" : "Dart panel hidden";
+      t1 = t1.panelVisible ? "\u60c5\u5831\u3092\u8868\u793a\u3057\u3066\u3044\u307e\u3059" : "\u60c5\u5831\u3092\u975e\u8868\u793a\u306b\u3057\u307e\u3057\u305f";
       _this.renderState.call$1(t1);
     },
     $signature: 1
