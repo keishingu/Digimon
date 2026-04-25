@@ -53,8 +53,11 @@
     SuperMonster.prototype.wait = function() {
       var f,
         _this = this;
+      if (window.__digimonTimer) {
+        clearInterval(window.__digimonTimer);
+      }
       f = 0;
-      return setInterval(function() {
+      return window.__digimonTimer = setInterval(function() {
         util.clearDot();
         util.drawDot(_this.waitingDots[f % 2], 0, 0);
         return f += 1;
@@ -64,8 +67,11 @@
     SuperMonster.prototype.eat = function(food) {
       var f,
         _this = this;
+      if (window.__digimonTimer) {
+        clearInterval(window.__digimonTimer);
+      }
       f = 0;
-      return setInterval(function() {
+      return window.__digimonTimer = setInterval(function() {
         util.clearDot();
         util.drawDot(food[f % 3], 0, 88);
         util.drawDot(_this.eatingDots[f % 2], 66, 0);
@@ -104,13 +110,42 @@
 
   monster = new Zurumon;
 
+  var currentMode;
+
+  currentMode = 'feed';
+
   window.digimonApp = {
     showFeed: function() {
+      currentMode = 'feed';
       return monster.eat(meet);
+    },
+    showWait: function() {
+      currentMode = 'wait';
+      return monster.wait();
+    },
+    showShout: function() {
+      currentMode = 'shout';
+      monster.shout(monster.name);
+      return monster.wait();
     },
     getMonsterName: function() {
       return monster.name;
+    },
+    getCurrentMode: function() {
+      return currentMode;
     }
+  };
+
+  document.getElementById('buttonA').onclick = function() {
+    return window.digimonApp.showFeed();
+  };
+
+  document.getElementById('buttonB').onclick = function() {
+    return window.digimonApp.showWait();
+  };
+
+  document.getElementById('buttonC').onclick = function() {
+    return window.digimonApp.showShout();
   };
 
   monster.eat(meet);

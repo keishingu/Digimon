@@ -3946,34 +3946,84 @@
     _AudioParamMap_JavaScriptObject_MapMixin: function _AudioParamMap_JavaScriptObject_MapMixin() {
     },
     main() {
-      var t1 = {},
+      var t4, t5, t6,
+        _s12_ = "Dart ready \u2705",
+        _s5_ = "click", t1 = {},
         t2 = document,
         $status = t2.querySelector("#dart-status"),
         t3 = type$.nullable_ButtonElement,
         feedButton = t3._as(t2.querySelector("#dart-feed")),
         toggleButton = t3._as(t2.querySelector("#dart-toggle")),
+        legacyFeed = t3._as(t2.querySelector("#buttonA")),
+        legacyWait = t3._as(t2.querySelector("#buttonB")),
+        legacyShout = t3._as(t2.querySelector("#buttonC")),
         panel = t2.querySelector("#dart-panel");
+      t2 = new A.main_setStatus($status);
       if ($status != null)
-        J.set$text$x($status, "Dart ready \u2705");
+        J.set$text$x($status, _s12_);
+      t3 = legacyFeed == null;
+      if (!t3)
+        B.ButtonElement_methods.set$text(legacyFeed, "A");
+      t4 = legacyWait == null;
+      if (!t4)
+        B.ButtonElement_methods.set$text(legacyWait, "B");
+      t5 = legacyShout == null;
+      if (!t5)
+        B.ButtonElement_methods.set$text(legacyShout, "C");
+      if (!t3)
+        B.ButtonElement_methods.set$title(legacyFeed, "Feed");
+      if (!t4)
+        B.ButtonElement_methods.set$title(legacyWait, "Wait");
+      if (!t5)
+        B.ButtonElement_methods.set$title(legacyShout, "Shout");
       if (feedButton != null) {
-        t2 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(feedButton, "click", t2._eval$1("~(1)?")._as(new A.main_closure($status)), false, t2._precomputed1);
+        t6 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(feedButton, _s5_, t6._eval$1("~(1)?")._as(new A.main_closure(new A.main_callApp(t2, $status))), false, t6._precomputed1);
+      }
+      if (!t3) {
+        t3 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(legacyFeed, _s5_, t3._eval$1("~(1)?")._as(new A.main_closure0(t2)), false, t3._precomputed1);
+      }
+      if (!t4) {
+        t3 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(legacyWait, _s5_, t3._eval$1("~(1)?")._as(new A.main_closure1(t2)), false, t3._precomputed1);
+      }
+      if (!t5) {
+        t3 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(legacyShout, _s5_, t3._eval$1("~(1)?")._as(new A.main_closure2(t2)), false, t3._precomputed1);
       }
       t1.panelVisible = true;
       if (toggleButton != null) {
-        t2 = type$._ElementEventStreamImpl_MouseEvent;
-        A._EventStreamSubscription$(toggleButton, "click", t2._eval$1("~(1)?")._as(new A.main_closure0(t1, panel, toggleButton, $status)), false, t2._precomputed1);
+        t3 = type$._ElementEventStreamImpl_MouseEvent;
+        A._EventStreamSubscription$(toggleButton, _s5_, t3._eval$1("~(1)?")._as(new A.main_closure3(t1, panel, toggleButton, t2)), false, t3._precomputed1);
       }
+      t2.call$1(_s12_);
     },
-    main_closure: function main_closure(t0) {
+    main_setStatus: function main_setStatus(t0) {
       this.status = t0;
     },
-    main_closure0: function main_closure0(t0, t1, t2, t3) {
+    main_callApp: function main_callApp(t0, t1) {
+      this.setStatus = t0;
+      this.status = t1;
+    },
+    main_closure: function main_closure(t0) {
+      this.callApp = t0;
+    },
+    main_closure0: function main_closure0(t0) {
+      this.setStatus = t0;
+    },
+    main_closure1: function main_closure1(t0) {
+      this.setStatus = t0;
+    },
+    main_closure2: function main_closure2(t0) {
+      this.setStatus = t0;
+    },
+    main_closure3: function main_closure3(t0, t1, t2, t3) {
       var _ = this;
       _._box_0 = t0;
       _.panel = t1;
       _.toggleButton = t2;
-      _.status = t3;
+      _.setStatus = t3;
     },
     throwLateFieldADI(fieldName) {
       throw A.initializeExceptionWrapper(new A.LateError("Field '" + fieldName + "' has been assigned during initialization."), new Error());
@@ -4518,19 +4568,19 @@
     call$1(o) {
       return this.getTag(o);
     },
-    $signature: 6
+    $signature: 7
   };
   A.initHooks_closure0.prototype = {
     call$2(o, tag) {
       return this.getUnknownTag(o, tag);
     },
-    $signature: 7
+    $signature: 8
   };
   A.initHooks_closure1.prototype = {
     call$1(tag) {
       return this.prototypeForTag(A._asString(tag));
     },
-    $signature: 8
+    $signature: 9
   };
   A.JSSyntaxRegExp.prototype = {
     toString$0(_) {
@@ -4684,7 +4734,7 @@
       t1.storedCallback = null;
       f.call$0();
     },
-    $signature: 3
+    $signature: 4
   };
   A._AsyncRun__initializeScheduleImmediate_closure.prototype = {
     call$1(callback) {
@@ -4694,19 +4744,19 @@
       t2 = this.span;
       t1.firstChild ? t1.removeChild(t2) : t1.appendChild(t2);
     },
-    $signature: 9
+    $signature: 10
   };
   A._AsyncRun__scheduleImmediateJsOverride_internalCallback.prototype = {
     call$0() {
       this.callback.call$0();
     },
-    $signature: 4
+    $signature: 5
   };
   A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback.prototype = {
     call$0() {
       this.callback.call$0();
     },
-    $signature: 4
+    $signature: 5
   };
   A._TimerImpl.prototype = {
     _TimerImpl$2(milliseconds, callback) {
@@ -4935,7 +4985,7 @@
     call$1(__wc0_formal) {
       this.joinedResult._completeWithResultOf$1(this.originalSource);
     },
-    $signature: 3
+    $signature: 4
   };
   A._Future__propagateToListeners_handleWhenCompleteCallback_closure0.prototype = {
     call$2(e, s) {
@@ -4943,7 +4993,7 @@
       type$.StackTrace._as(s);
       this.joinedResult._completeErrorObject$1(new A.AsyncError(e, s));
     },
-    $signature: 10
+    $signature: 11
   };
   A._Future__propagateToListeners_handleValueCallback.prototype = {
     call$0() {
@@ -5311,7 +5361,7 @@
       t2 = A.S(v);
       t1._contents += t2;
     },
-    $signature: 11
+    $signature: 12
   };
   A.SetBase.prototype = {
     toString$0(_) {
@@ -5708,6 +5758,9 @@
       t1.toString;
       return t1;
     },
+    set$title(receiver, value) {
+      receiver.title = value;
+    },
     $isElement: 1
   };
   A.Event.prototype = {$isEvent: 1};
@@ -5837,7 +5890,7 @@
     call$2(k, v) {
       return B.JSArray_methods.add$1(this.keys, k);
     },
-    $signature: 1
+    $signature: 2
   };
   A.MidiOutputMap.prototype = {
     $index(receiver, key) {
@@ -5873,7 +5926,7 @@
     call$2(k, v) {
       return B.JSArray_methods.add$1(this.keys, k);
     },
-    $signature: 1
+    $signature: 2
   };
   A.MimeType.prototype = {$isMimeType: 1};
   A.MimeTypeArray.prototype = {
@@ -6002,7 +6055,7 @@
     call$2(k, v) {
       return B.JSArray_methods.add$1(this.keys, k);
     },
-    $signature: 1
+    $signature: 2
   };
   A.SelectElement.prototype = {
     get$length(receiver) {
@@ -6098,7 +6151,7 @@
     call$2(k, v) {
       return B.JSArray_methods.add$1(this.keys, k);
     },
-    $signature: 12
+    $signature: 6
   };
   A.StyleSheet.prototype = {$isStyleSheet: 1};
   A.TextTrack.prototype = {$isTextTrack: 1};
@@ -6695,7 +6748,7 @@
     call$2(k, v) {
       return B.JSArray_methods.add$1(this.keys, k);
     },
-    $signature: 1
+    $signature: 2
   };
   A.AudioTrackList.prototype = {
     get$length(receiver) {
@@ -6709,25 +6762,63 @@
     }
   };
   A._AudioParamMap_JavaScriptObject_MapMixin.prototype = {};
+  A.main_setStatus.prototype = {
+    call$1(message) {
+      var digimonApp = window.digimonApp,
+        mode = digimonApp == null ? null : A._asString(digimonApp.getCurrentMode()),
+        t1 = this.status;
+      if (t1 != null)
+        J.set$text$x(t1, mode == null ? message : message + " / mode: " + mode);
+    },
+    $signature: 14
+  };
+  A.main_callApp.prototype = {
+    call$2(method, message) {
+      var t1,
+        digimonApp = window.digimonApp;
+      if (digimonApp != null) {
+        digimonApp[method]();
+        this.setStatus.call$1(message);
+      } else {
+        t1 = this.status;
+        if (t1 != null)
+          J.set$text$x(t1, "digimonApp not ready");
+      }
+    },
+    $signature: 6
+  };
   A.main_closure.prototype = {
     call$1(__wc0_formal) {
-      var digimonApp, t1;
       type$.MouseEvent._as(__wc0_formal);
-      digimonApp = window.digimonApp;
-      t1 = this.status;
-      if (digimonApp != null) {
-        digimonApp.showFeed();
-        if (t1 != null)
-          J.set$text$x(t1, "Dart triggered feed animation \ud83c\udf56");
-      } else if (t1 != null)
-        J.set$text$x(t1, "digimonApp not ready");
+      return this.callApp.call$2("showFeed", "Dart triggered feed animation \ud83c\udf56");
     },
-    $signature: 5
+    $signature: 1
   };
   A.main_closure0.prototype = {
     call$1(__wc1_formal) {
-      var t1, t2, _this = this;
       type$.MouseEvent._as(__wc1_formal);
+      return this.setStatus.call$1("Legacy button A / Feed");
+    },
+    $signature: 1
+  };
+  A.main_closure1.prototype = {
+    call$1(__wc2_formal) {
+      type$.MouseEvent._as(__wc2_formal);
+      return this.setStatus.call$1("Legacy button B / Wait");
+    },
+    $signature: 1
+  };
+  A.main_closure2.prototype = {
+    call$1(__wc3_formal) {
+      type$.MouseEvent._as(__wc3_formal);
+      return this.setStatus.call$1("Legacy button C / Shout");
+    },
+    $signature: 1
+  };
+  A.main_closure3.prototype = {
+    call$1(__wc4_formal) {
+      var t1, t2, _this = this;
+      type$.MouseEvent._as(__wc4_formal);
       t1 = _this._box_0;
       t1.panelVisible = !t1.panelVisible;
       t2 = _this.panel;
@@ -6735,11 +6826,10 @@
         J.get$classes$x(t2).toggle$2(0, "collapsed", !t1.panelVisible);
       t2 = t1.panelVisible ? "Dart\u8868\u793a ON/OFF" : "Dart\u8868\u793a\u3092\u623b\u3059";
       B.ButtonElement_methods.set$text(_this.toggleButton, t2);
-      t2 = _this.status;
-      if (t2 != null)
-        J.set$text$x(t2, t1.panelVisible ? "Dart panel visible" : "Dart panel hidden");
+      t1 = t1.panelVisible ? "Dart panel visible" : "Dart panel hidden";
+      _this.setStatus.call$1(t1);
     },
-    $signature: 5
+    $signature: 1
   };
   (function aliases() {
     var _ = J.Interceptor.prototype;
@@ -6750,9 +6840,9 @@
   (function installTearOffs() {
     var _static_1 = hunkHelpers._static_1,
       _static_0 = hunkHelpers._static_0;
-    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 2);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 2);
-    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 2);
+    _static_1(A, "async__AsyncRun__scheduleImmediateJsOverride$closure", "_AsyncRun__scheduleImmediateJsOverride", 3);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithSetImmediate$closure", "_AsyncRun__scheduleImmediateWithSetImmediate", 3);
+    _static_1(A, "async__AsyncRun__scheduleImmediateWithTimer$closure", "_AsyncRun__scheduleImmediateWithTimer", 3);
     _static_0(A, "async___startMicrotaskLoop$closure", "_startMicrotaskLoop", 0);
   })();
   (function inheritance() {
@@ -6770,11 +6860,11 @@
     _inheritMany(A.Error, [A.LateError, A.TypeError, A.JsNoSuchMethodError, A.UnknownJsTypeError, A.RuntimeError, A._Error, A.AssertionError, A.ArgumentError, A.UnsupportedError, A.UnimplementedError, A.ConcurrentModificationError]);
     _inherit(A.EfficientLengthIterable, A.Iterable);
     _inherit(A.NullError, A.TypeError);
-    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_closure, A.main_closure0]);
+    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_setStatus, A.main_closure, A.main_closure0, A.main_closure1, A.main_closure2, A.main_closure3]);
     _inheritMany(A.TearOffClosure, [A.StaticClosure, A.BoundClosure]);
     _inherit(A.JsLinkedHashMap, A.MapBase);
     _inherit(A.LinkedHashMapKeysIterable, A.EfficientLengthIterable);
-    _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._Future__propagateToListeners_handleWhenCompleteCallback_closure0, A.MapBase_mapToString_closure, A.MidiInputMap_keys_closure, A.MidiOutputMap_keys_closure, A.RtcStatsReport_keys_closure, A.Storage_keys_closure, A.AudioParamMap_keys_closure]);
+    _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._Future__propagateToListeners_handleWhenCompleteCallback_closure0, A.MapBase_mapToString_closure, A.MidiInputMap_keys_closure, A.MidiOutputMap_keys_closure, A.RtcStatsReport_keys_closure, A.Storage_keys_closure, A.AudioParamMap_keys_closure, A.main_callApp]);
     _inheritMany(A.NativeTypedData, [A.NativeByteData, A.NativeTypedArray]);
     _inheritMany(A.NativeTypedArray, [A._NativeTypedArrayOfDouble_NativeTypedArray_ListMixin, A._NativeTypedArrayOfInt_NativeTypedArray_ListMixin]);
     _inherit(A._NativeTypedArrayOfDouble_NativeTypedArray_ListMixin_FixedLengthListMixin, A._NativeTypedArrayOfDouble_NativeTypedArray_ListMixin);
@@ -6909,7 +6999,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List", Object: "Object", Map: "Map", JSObject: "JSObject"},
     mangledNames: {},
-    types: ["~()", "~(String,@)", "~(~())", "Null(@)", "Null()", "~(MouseEvent)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Object?,Object?)", "~(String,String)", "~(Event)"],
+    types: ["~()", "~(MouseEvent)", "~(String,@)", "~(~())", "Null(@)", "Null()", "~(String,String)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Object?,Object?)", "~(Event)", "~(String)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti")
@@ -7235,14 +7325,14 @@
     A._TextTrackList_EventTarget_ListMixin.$nativeSuperclassTag = "EventTarget";
     A._TextTrackList_EventTarget_ListMixin_ImmutableListMixin.$nativeSuperclassTag = "EventTarget";
   })();
-  Function.prototype.call$0 = function() {
-    return this();
-  };
   Function.prototype.call$1 = function(a) {
     return this(a);
   };
   Function.prototype.call$2 = function(a, b) {
     return this(a, b);
+  };
+  Function.prototype.call$0 = function() {
+    return this();
   };
   Function.prototype.call$3 = function(a, b, c) {
     return this(a, b, c);
