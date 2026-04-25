@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html';
 import 'dart:js_util' as js_util;
 
@@ -8,6 +9,7 @@ class MonsterState {
     required this.vitality,
     required this.mode,
     required this.lastAction,
+    required this.actionCount,
   });
 
   String stage;
@@ -15,6 +17,7 @@ class MonsterState {
   int vitality;
   String mode;
   String lastAction;
+  int actionCount;
 }
 
 void main() {
@@ -32,11 +35,12 @@ void main() {
   final mode = querySelector('#stat-mode');
 
   final current = MonsterState(
-    stage: 'Zurumon',
+    stage: 'Digitama',
     hunger: 4,
     vitality: 4,
-    mode: 'feed',
+    mode: 'idle',
     lastAction: 'spawn',
+    actionCount: 0,
   );
 
   Object? digimonApp() => js_util.getProperty<Object?>(window, 'digimonApp');
@@ -52,15 +56,23 @@ void main() {
         'vitality': current.vitality,
         'mode': current.mode,
         'lastAction': current.lastAction,
+        'actionCount': current.actionCount,
       })
     ]);
+  }
+
+  void updateEvolution() {
+    if (current.stage == 'Digitama' && current.actionCount >= 3) {
+      current.stage = 'Zurumon';
+      current.lastAction = 'evolve';
+    }
   }
 
   void renderState([String? prefix]) {
     stage?.text = current.stage;
     hunger?.text = '${current.hunger} / 4';
     vitality?.text = '${current.vitality} / 4';
-    mode?.text = current.mode;
+    mode?.text = '${current.mode}';
 
     status?.text = prefix == null
         ? 'Dart ready ✅ / last: ${current.lastAction}'
@@ -73,20 +85,24 @@ void main() {
         current.mode = 'feed';
         current.hunger = current.hunger > 0 ? current.hunger - 1 : 0;
         current.lastAction = 'feed';
+        current.actionCount += 1;
         break;
       case 'wait':
         current.mode = 'wait';
         current.hunger = current.hunger < 4 ? current.hunger + 1 : 4;
         current.vitality = current.vitality > 0 ? current.vitality - 1 : 0;
         current.lastAction = 'wait';
+        current.actionCount += 1;
         break;
       case 'shout':
         current.mode = 'shout';
         current.vitality = current.vitality < 4 ? current.vitality + 1 : 4;
         current.lastAction = 'shout';
+        current.actionCount += 1;
         break;
     }
 
+    updateEvolution();
     syncToJs();
     renderState(message);
   }

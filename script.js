@@ -19,7 +19,8 @@
     vitality: 4,
     stage: 'Zurumon',
     mode: 'feed',
-    lastAction: 'spawn'
+    lastAction: 'spawn',
+    actionCount: 0
   };
 
   util.clearDot = function() {
@@ -170,7 +171,8 @@
         hunger: monsterState.hunger,
         vitality: monsterState.vitality,
         mode: monsterState.mode,
-        lastAction: monsterState.lastAction
+        lastAction: monsterState.lastAction,
+        actionCount: monsterState.actionCount
       };
     },
     setState: function(nextState) {
@@ -189,6 +191,9 @@
       }
       if (nextState.lastAction != null) {
         monsterState.lastAction = nextState.lastAction;
+      }
+      if (nextState.actionCount != null) {
+        monsterState.actionCount = nextState.actionCount;
       }
       return monsterState;
     }

@@ -4060,11 +4060,11 @@
         legacyWait = t3._as(t2.querySelector("#buttonB")),
         legacyShout = t3._as(t2.querySelector("#buttonC")),
         panel = t2.querySelector("#dart-panel"),
-        current = new A.MonsterState("Zurumon", 4, 4, "feed", "spawn");
+        current = new A.MonsterState("Digitama", 4, 4, "idle", "spawn", 0);
       t3 = new A.main_digimonApp();
       t4 = new A.main_syncToJs(t3, current);
       t2 = new A.main_renderState(t2.querySelector("#stat-stage"), current, t2.querySelector("#stat-hunger"), t2.querySelector("#stat-vitality"), t2.querySelector("#stat-mode"), $status);
-      t5 = new A.main_applyAction(current, t4, t2);
+      t5 = new A.main_applyAction(current, new A.main_updateEvolution(current), t4, t2);
       t6 = legacyFeed == null;
       if (!t6)
         B.ButtonElement_methods.set$text(legacyFeed, "A");
@@ -4104,19 +4104,23 @@
       t4.call$0();
       t2.call$1("Dart ready \u2705");
     },
-    MonsterState: function MonsterState(t0, t1, t2, t3, t4) {
+    MonsterState: function MonsterState(t0, t1, t2, t3, t4, t5) {
       var _ = this;
       _.stage = t0;
       _.hunger = t1;
       _.vitality = t2;
       _.mode = t3;
       _.lastAction = t4;
+      _.actionCount = t5;
     },
     main_digimonApp: function main_digimonApp() {
     },
     main_syncToJs: function main_syncToJs(t0, t1) {
       this.digimonApp = t0;
       this.current = t1;
+    },
+    main_updateEvolution: function main_updateEvolution(t0) {
+      this.current = t0;
     },
     main_renderState: function main_renderState(t0, t1, t2, t3, t4, t5) {
       var _ = this;
@@ -4127,10 +4131,12 @@
       _.mode = t4;
       _.status = t5;
     },
-    main_applyAction: function main_applyAction(t0, t1, t2) {
-      this.current = t0;
-      this.syncToJs = t1;
-      this.renderState = t2;
+    main_applyAction: function main_applyAction(t0, t1, t2, t3) {
+      var _ = this;
+      _.current = t0;
+      _.updateEvolution = t1;
+      _.syncToJs = t2;
+      _.renderState = t3;
     },
     main_callApp: function main_callApp(t0, t1, t2) {
       this.digimonApp = t0;
@@ -7235,7 +7241,17 @@
       if (app == null)
         return;
       t1 = this.current;
-      app.setState(A.jsify(A.LinkedHashMap_LinkedHashMap$_literal(["stage", t1.stage, "hunger", t1.hunger, "vitality", t1.vitality, "mode", t1.mode, "lastAction", t1.lastAction], type$.String, type$.Object)));
+      app.setState(A.jsify(A.LinkedHashMap_LinkedHashMap$_literal(["stage", t1.stage, "hunger", t1.hunger, "vitality", t1.vitality, "mode", t1.mode, "lastAction", t1.lastAction, "actionCount", t1.actionCount], type$.String, type$.Object)));
+    },
+    $signature: 0
+  };
+  A.main_updateEvolution.prototype = {
+    call$0() {
+      var t1 = this.current;
+      if (t1.stage === "Digitama" && t1.actionCount >= 3) {
+        t1.stage = "Zurumon";
+        t1.lastAction = "evolve";
+      }
     },
     $signature: 0
   };
@@ -7275,6 +7291,7 @@
           t2 = t1.hunger;
           t1.hunger = t2 > 0 ? t2 - 1 : 0;
           t1.lastAction = "feed";
+          ++t1.actionCount;
           break;
         case "wait":
           t1 = _this.current;
@@ -7284,6 +7301,7 @@
           t2 = t1.vitality;
           t1.vitality = t2 > 0 ? t2 - 1 : 0;
           t1.lastAction = "wait";
+          ++t1.actionCount;
           break;
         case "shout":
           t1 = _this.current;
@@ -7291,8 +7309,10 @@
           t2 = t1.vitality;
           t1.vitality = t2 < 4 ? t2 + 1 : 4;
           t1.lastAction = "shout";
+          ++t1.actionCount;
           break;
       }
+      _this.updateEvolution.call$0();
       _this.syncToJs.call$0();
       _this.renderState.call$1(message);
     },
@@ -7402,7 +7422,7 @@
     _inheritMany(A.NativeTypedArrayOfDouble, [A.NativeFloat32List, A.NativeFloat64List]);
     _inheritMany(A.NativeTypedArrayOfInt, [A.NativeInt16List, A.NativeInt32List, A.NativeInt8List, A.NativeUint16List, A.NativeUint32List, A.NativeUint8ClampedList, A.NativeUint8List]);
     _inherit(A._TypeError, A._Error);
-    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__asyncCompleteErrorObject_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._RootZone_bindCallbackGuarded_closure, A._rootHandleError_closure, A.main_digimonApp, A.main_syncToJs]);
+    _inheritMany(A.Closure0Args, [A._AsyncRun__scheduleImmediateJsOverride_internalCallback, A._AsyncRun__scheduleImmediateWithSetImmediate_internalCallback, A._TimerImpl_internalCallback, A._Future__addListener_closure, A._Future__prependListeners_closure, A._Future__asyncCompleteErrorObject_closure, A._Future__propagateToListeners_handleWhenCompleteCallback, A._Future__propagateToListeners_handleValueCallback, A._Future__propagateToListeners_handleError, A.Stream_length_closure0, A._RootZone_bindCallbackGuarded_closure, A._rootHandleError_closure, A.main_digimonApp, A.main_syncToJs, A.main_updateEvolution]);
     _inherit(A._RootZone, A._Zone);
     _inherit(A._IdentityHashMap, A._HashMap);
     _inheritMany(A.SetBase, [A._SetBase, A.CssClassSetImpl]);
