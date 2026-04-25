@@ -1,54 +1,36 @@
+import 'dart:async';
 import 'dart:html';
+
+class EvolutionMilestone {
+  const EvolutionMilestone(this.stage, this.elapsed);
+
+  final String stage;
+  final Duration elapsed;
+}
 
 class MonsterState {
   MonsterState({
     required this.stage,
-    required this.hunger,
-    required this.vitality,
+    required this.startedAt,
+    required this.nextEvolutionAt,
     required this.mode,
-    required this.lastAction,
-    required this.actionCount,
+    required this.lastEvent,
   });
 
   String stage;
-  int hunger;
-  int vitality;
+  DateTime startedAt;
+  DateTime nextEvolutionAt;
   String mode;
-  String lastAction;
-  int actionCount;
+  String lastEvent;
 }
 
-const List<List<List<int>>> meetDots = [
-  [
-    [0, 1, 1, 1, 0, 0, 0, 0],
-    [1, 1, 1, 0, 1, 0, 0, 0],
-    [1, 1, 1, 1, 0, 1, 0, 0],
-    [1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 1, 1, 1, 0, 1, 0, 0],
-    [0, 0, 1, 1, 1, 0, 1, 1],
-    [0, 0, 0, 0, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 1, 1, 0],
-  ],
-  [
-    [0, 1, 1, 0, 0, 0, 0, 0],
-    [1, 0, 1, 1, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 0, 0],
-    [0, 1, 1, 1, 1, 1, 0, 0],
-    [0, 1, 1, 1, 0, 1, 0, 0],
-    [0, 0, 1, 1, 1, 0, 1, 1],
-    [0, 0, 0, 0, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 1, 1, 0],
-  ],
-  [
-    [0, 1, 1, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0],
-    [1, 1, 0, 1, 0, 0, 0, 0],
-    [0, 0, 1, 0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 1, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 1],
-    [0, 0, 0, 0, 0, 1, 0, 1],
-    [0, 0, 0, 0, 0, 1, 1, 0],
-  ],
+const List<EvolutionMilestone> milestones = [
+  EvolutionMilestone('Digitama', Duration.zero),
+  EvolutionMilestone('Baby I', Duration(seconds: 10)),
+  EvolutionMilestone('Baby II', Duration(minutes: 10, seconds: 10)),
+  EvolutionMilestone('Child', Duration(hours: 6, minutes: 10, seconds: 10)),
+  EvolutionMilestone('Adult', Duration(hours: 30, minutes: 10, seconds: 10)),
+  EvolutionMilestone('Perfect', Duration(hours: 66, minutes: 10, seconds: 10)),
 ];
 
 const List<List<List<int>>> digitamaWaitingDots = [
@@ -90,48 +72,22 @@ const List<List<List<int>>> digitamaWaitingDots = [
   ],
 ];
 
-const List<List<List<int>>> zurumonEatingDots = [
-  [
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ],
-  [
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ],
-];
+String formatRemaining(Duration duration) {
+  if (duration.isNegative) return 'まもなく';
+  final hours = duration.inHours;
+  final minutes = duration.inMinutes.remainder(60);
+  final seconds = duration.inSeconds.remainder(60);
+  if (hours > 0) {
+    return '${hours}時間${minutes}分';
+  }
+  if (minutes > 0) {
+    return '${minutes}分${seconds}秒';
+  }
+  return '${seconds}秒';
+}
 
 void main() {
   final status = querySelector('#dart-status');
-  final feedButton = querySelector('#dart-feed') as ButtonElement?;
   final toggleButton = querySelector('#dart-toggle') as ButtonElement?;
   final legacyFeed = querySelector('#buttonA') as ButtonElement?;
   final legacyWait = querySelector('#buttonB') as ButtonElement?;
@@ -140,27 +96,25 @@ void main() {
   final canvas = querySelector('#sample') as CanvasElement?;
   final ctx = canvas?.context2D;
 
-  final stage = querySelector('#stat-stage');
+  final stageLabel = querySelector('#stat-stage');
   final hunger = querySelector('#stat-hunger');
   final vitality = querySelector('#stat-vitality');
   final mode = querySelector('#stat-mode');
 
+  final now = DateTime.now();
   final current = MonsterState(
-    stage: 'Digitama',
-    hunger: 4,
-    vitality: 4,
-    mode: 'idle',
-    lastAction: 'spawn',
-    actionCount: 0,
+    stage: milestones.first.stage,
+    startedAt: now,
+    nextEvolutionAt: now.add(milestones[1].elapsed),
+    mode: 'observe',
+    lastEvent: '誕生しました',
   );
 
   int waitingFrame = 0;
-  int feedFrame = 0;
-  bool showShoutFlash = false;
-
 
   void drawDots(List<List<int>> dots, {int startX = 0, int startY = 0}) {
     if (ctx == null) return;
+    ctx.fillStyle = '#111827';
     for (var y = 0; y < dots.length; y++) {
       for (var x = 0; x < dots[y].length; x++) {
         if (dots[y][x] == 1) {
@@ -170,94 +124,57 @@ void main() {
     }
   }
 
-  void renderWaitingFrame() {
+  void renderCurrentFrame() {
     if (ctx == null) return;
     ctx.clearRect(0, 0, 200, 200);
     drawDots(digitamaWaitingDots[waitingFrame % digitamaWaitingDots.length]);
     waitingFrame += 1;
   }
 
-  void renderFeedFrame() {
-    if (ctx == null) return;
-    ctx.clearRect(0, 0, 200, 200);
-    drawDots(meetDots[feedFrame % meetDots.length], startX: 0, startY: 88);
-    drawDots(zurumonEatingDots[feedFrame % zurumonEatingDots.length], startX: 66, startY: 0);
-    feedFrame += 1;
-  }
-
-  void renderShoutFrame() {
-    if (ctx == null) return;
-    ctx.clearRect(0, 0, 200, 200);
-    renderWaitingFrame();
-    ctx
-      ..fillStyle = showShoutFlash ? '#ef4444' : '#f59e0b'
-      ..font = 'bold 28px sans-serif'
-      ..fillText('!', 150, 40);
-    showShoutFlash = !showShoutFlash;
-  }
-
-
-  void updateEvolution() {
-    if (current.stage == 'Digitama' && current.actionCount >= 3) {
-      current.stage = 'Zurumon';
-      current.lastAction = 'evolve';
+  void updateStageByTime() {
+    final elapsed = DateTime.now().difference(current.startedAt);
+    for (var i = milestones.length - 1; i >= 0; i--) {
+      if (elapsed >= milestones[i].elapsed) {
+        if (current.stage != milestones[i].stage) {
+          current.stage = milestones[i].stage;
+          current.lastEvent = '${milestones[i].stage}に進化しました';
+        }
+        final nextIndex = i + 1;
+        if (nextIndex < milestones.length) {
+          current.nextEvolutionAt = current.startedAt.add(milestones[nextIndex].elapsed);
+        } else {
+          current.nextEvolutionAt = current.startedAt.add(milestones.last.elapsed);
+        }
+        return;
+      }
     }
   }
 
   void renderState([String? prefix]) {
-    stage?.text = current.stage;
-    hunger?.text = '${current.hunger} / 4';
-    vitality?.text = '${current.vitality} / 4';
-    mode?.text = '${current.mode}';
+    updateStageByTime();
+    final remaining = current.nextEvolutionAt.difference(DateTime.now());
+    stageLabel?.text = current.stage;
+    hunger?.text = 'なし';
+    vitality?.text = 'なし';
+    mode?.text = formatRemaining(remaining);
 
     status?.text = prefix == null
-        ? '準備完了 / last: ${current.lastAction}'
-        : '$prefix / last: ${current.lastAction}';
+        ? '${current.lastEvent} / 次の進化まで ${formatRemaining(remaining)}'
+        : '$prefix / 次の進化まで ${formatRemaining(remaining)}';
   }
 
-  void applyAction(String action, String message) {
-    switch (action) {
-      case 'feed':
-        current.mode = 'feed';
-        current.hunger = current.hunger > 0 ? current.hunger - 1 : 0;
-        current.lastAction = 'feed';
-        current.actionCount += 1;
-        renderFeedFrame();
-        break;
-      case 'wait':
-        current.mode = 'wait';
-        current.hunger = current.hunger < 4 ? current.hunger + 1 : 4;
-        current.vitality = current.vitality > 0 ? current.vitality - 1 : 0;
-        current.lastAction = 'wait';
-        current.actionCount += 1;
-        renderWaitingFrame();
-        break;
-      case 'shout':
-        current.mode = 'shout';
-        current.vitality = current.vitality < 4 ? current.vitality + 1 : 4;
-        current.lastAction = 'shout';
-        current.actionCount += 1;
-        renderShoutFrame();
-        break;
-    }
-
-    updateEvolution();
-    renderState(message);
-  }
-
-  legacyFeed?.text = 'A';
-  legacyWait?.text = 'B';
-  legacyShout?.text = 'C';
-
-  legacyFeed?.title = 'Feed (Dart renderer)';
-  legacyWait?.title = 'Wait (Dart renderer)';
-  legacyShout?.title = 'Shout (Dart renderer)';
-
-  feedButton?.onClick.listen((_) => applyAction('feed', 'ごはんをあげました'));
-
-  legacyFeed?.onClick.listen((_) => applyAction('feed', 'ごはんをあげました'));
-  legacyWait?.onClick.listen((_) => applyAction('wait', 'ようすをみています'));
-  legacyShout?.onClick.listen((_) => applyAction('shout', 'げんきを出しました'));
+  legacyFeed
+    ?..text = 'A'
+    ..disabled = true
+    ..title = '今回は観察モードです';
+  legacyWait
+    ?..text = 'B'
+    ..disabled = true
+    ..title = '今回は観察モードです';
+  legacyShout
+    ?..text = 'C'
+    ..disabled = true
+    ..title = '今回は観察モードです';
 
   var panelVisible = true;
   toggleButton?.onClick.listen((_) {
@@ -267,6 +184,11 @@ void main() {
     renderState(panelVisible ? '情報を表示しています' : '情報を非表示にしました');
   });
 
-  renderWaitingFrame();
-  renderState('準備完了');
+  Timer.periodic(const Duration(seconds: 1), (_) {
+    renderCurrentFrame();
+    renderState();
+  });
+
+  renderCurrentFrame();
+  renderState('観察を開始しました');
 }
