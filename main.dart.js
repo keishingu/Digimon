@@ -3578,9 +3578,9 @@
       vitality = t2.querySelector("#stat-vitality");
       mode = t2.querySelector("#stat-mode");
       now = new A.DateTime(Date.now(), 0, false);
-      current = new A.MonsterState(B.JSArray_methods.get$first(B.List_phN).stage, now, now._addMicroseconds$1(10000000), "\u8a95\u751f\u3057\u307e\u3057\u305f");
-      t1.waitingFrame = 0;
-      t2 = new A.main_renderCurrentFrame(t1, ctx, new A.main_drawDots(ctx));
+      current = new A.MonsterState(B.JSArray_methods.get$first(B.List_zb2).stage, now, now._addMicroseconds$1(10000000), "\u8a95\u751f\u3057\u307e\u3057\u305f");
+      t1.frame = 0;
+      t2 = new A.main_renderCurrentFrame(t1, ctx, current, new A.main_drawSprite(ctx));
       t3 = new A.main_renderState(new A.main_updateStageByTime(current), current, stageLabel, hunger, vitality, mode, $status);
       if (legacyFeed != null) {
         B.ButtonElement_methods.set$text(legacyFeed, "A");
@@ -3602,9 +3602,9 @@
         t4 = type$._ElementEventStreamImpl_MouseEvent;
         A._EventStreamSubscription$(toggleButton, "click", t4._eval$1("~(1)?")._as(new A.main_closure(t1, panel, toggleButton, t3)), false, t4._precomputed1);
       }
-      A.Timer_Timer$periodic(B.Duration_1000000, new A.main_closure0(t2, t3));
-      t2.call$0();
+      A.Timer_Timer$periodic(B.Duration_1000000, new A.main_closure0(t3, t2));
       t3.call$1("\u89b3\u5bdf\u3092\u958b\u59cb\u3057\u307e\u3057\u305f");
+      t2.call$0();
     },
     EvolutionMilestone: function EvolutionMilestone(t0, t1) {
       this.stage = t0;
@@ -3617,13 +3617,15 @@
       _.nextEvolutionAt = t2;
       _.lastEvent = t3;
     },
-    main_drawDots: function main_drawDots(t0) {
+    main_drawSprite: function main_drawSprite(t0) {
       this.ctx = t0;
     },
-    main_renderCurrentFrame: function main_renderCurrentFrame(t0, t1, t2) {
-      this._box_0 = t0;
-      this.ctx = t1;
-      this.drawDots = t2;
+    main_renderCurrentFrame: function main_renderCurrentFrame(t0, t1, t2, t3) {
+      var _ = this;
+      _._box_0 = t0;
+      _.ctx = t1;
+      _.current = t2;
+      _.drawSprite = t3;
     },
     main_updateStageByTime: function main_updateStageByTime(t0) {
       this.current = t0;
@@ -3646,8 +3648,8 @@
       _.renderState = t3;
     },
     main_closure0: function main_closure0(t0, t1) {
-      this.renderCurrentFrame = t0;
-      this.renderState = t1;
+      this.renderState = t0;
+      this.renderCurrentFrame = t1;
     },
     throwLateFieldADI(fieldName) {
       throw A.initializeExceptionWrapper(new A.LateError("Field '" + fieldName + "' has been assigned during initialization."), new Error());
@@ -5234,33 +5236,65 @@
   };
   A.EvolutionMilestone.prototype = {};
   A.MonsterState.prototype = {};
-  A.main_drawDots.prototype = {
-    call$3$startX$startY(dots, startX, startY) {
-      var t1, y, t2, x;
+  A.main_drawSprite.prototype = {
+    call$3$offsetX$offsetY(dots, offsetX, offsetY) {
+      var t1, t2, y, t3, x;
       type$.List_List_int._as(dots);
       t1 = this.ctx;
       if (t1 == null)
         return;
       B.CanvasRenderingContext2D_methods.set$fillStyle(t1, "#111827");
-      for (y = 0; y < 16; ++y)
-        for (t2 = startY + y * 11, x = 0; x < 16; ++x)
+      for (t2 = dots.length, y = 0; y < t2; ++y)
+        for (t3 = offsetY + y * 11, x = 0; x < 16; ++x)
           if (dots[y][x] === 1)
-            t1.fillRect(startX + x * 11, t2, 10, 10);
+            t1.fillRect(offsetX + x * 11, t3, 10, 10);
     },
     call$1(dots) {
-      return this.call$3$startX$startY(dots, 0, 0);
+      return this.call$3$offsetX$offsetY(dots, 0, 0);
     },
     $signature: 10
   };
   A.main_renderCurrentFrame.prototype = {
     call$0() {
-      var t1 = this.ctx;
+      var t2, _this = this,
+        t1 = _this.ctx;
       if (t1 == null)
         return;
       t1.clearRect(0, 0, 200, 200);
-      t1 = this._box_0;
-      this.drawDots.call$1(B.List_EVh[B.JSInt_methods.$mod(t1.waitingFrame, 2)]);
-      ++t1.waitingFrame;
+      t1 = _this.drawSprite;
+      switch (_this.current.stage) {
+        case "Zurumon":
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_ZPC[B.JSInt_methods.$mod(t2.frame, 2)], 12, 12);
+          t1 = t2;
+          break;
+        case "Pagumon":
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_Pif, (t2.frame & 1) === 0 ? 6 : 10, 12);
+          t1 = t2;
+          break;
+        case "Gazimon":
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_lNm, (t2.frame & 1) === 0 ? 4 : 8, 12);
+          t1 = t2;
+          break;
+        case "DarkTyrannomon":
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_by2, (t2.frame & 1) === 0 ? 8 : 12, 22);
+          t1 = t2;
+          break;
+        case "MetalTyrannomon":
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_PF5, (t2.frame & 1) === 0 ? 12 : 16, 42);
+          t1 = t2;
+          break;
+        default:
+          t2 = _this._box_0;
+          t1.call$3$offsetX$offsetY(B.List_ZPC[B.JSInt_methods.$mod(t2.frame, 2)], 12, 12);
+          t1 = t2;
+          break;
+      }
+      ++t1.frame;
     },
     $signature: 0
   };
@@ -5270,7 +5304,7 @@
         t1 = this.current,
         t2 = t1.startedAt;
       for (t3 = new A.DateTime(Date.now(), 0, false).difference$1(t2)._duration, i = 5; i >= 0; --i) {
-        t4 = B.List_phN[i];
+        t4 = B.List_zb2[i];
         if (t3 >= t4.elapsed._duration) {
           t3 = t4.stage;
           if (t1.stage !== t3) {
@@ -5279,9 +5313,9 @@
           }
           nextIndex = i + 1;
           if (nextIndex < 6)
-            t1.nextEvolutionAt = t2._addMicroseconds$1(B.List_phN[nextIndex].elapsed._duration);
+            t1.nextEvolutionAt = t2._addMicroseconds$1(B.List_zb2[nextIndex].elapsed._duration);
           else
-            t1.nextEvolutionAt = t2._addMicroseconds$1(B.JSArray_methods.get$last(B.List_phN).elapsed._duration);
+            t1.nextEvolutionAt = t2._addMicroseconds$1(B.JSArray_methods.get$last(B.List_zb2).elapsed._duration);
           return;
         }
       }
@@ -5290,7 +5324,8 @@
   };
   A.main_renderState.prototype = {
     call$1(prefix) {
-      var t1, remaining, t2, _this = this;
+      var t1, remaining, t2, t3, _this = this,
+        _s11_ = "\u6700\u7d42\u6bb5\u968e\u306b\u5230\u9054\u3057\u307e\u3057\u305f";
       _this.updateStageByTime.call$0();
       t1 = _this.current;
       remaining = t1.nextEvolutionAt.difference$1(new A.DateTime(Date.now(), 0, false));
@@ -5305,10 +5340,19 @@
         J.set$text$x(t2, "\u306a\u3057");
       t2 = _this.mode;
       if (t2 != null)
-        J.set$text$x(t2, A.formatRemaining(remaining));
+        J.set$text$x(t2, t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? "\u6700\u7d42\u6bb5\u968e" : A.formatRemaining(remaining));
       t2 = _this.status;
-      if (t2 != null)
-        J.set$text$x(t2, prefix == null ? t1.lastEvent + " / \u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining) : prefix + " / \u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining));
+      if (t2 != null) {
+        if (prefix == null) {
+          t3 = t1.lastEvent;
+          t1 = t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? _s11_ : "\u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining);
+          t1 = t3 + " / " + t1;
+        } else {
+          t1 = t1.stage === B.JSArray_methods.get$last(B.List_zb2).stage ? _s11_ : "\u6b21\u306e\u9032\u5316\u307e\u3067 " + A.formatRemaining(remaining);
+          t1 = prefix + " / " + t1;
+        }
+        J.set$text$x(t2, t1);
+      }
     },
     call$0() {
       return this.call$1(null);
@@ -5334,8 +5378,8 @@
   A.main_closure0.prototype = {
     call$1(__wc1_formal) {
       type$.Timer._as(__wc1_formal);
-      this.renderCurrentFrame.call$0();
       this.renderState.call$0();
+      this.renderCurrentFrame.call$0();
     },
     $signature: 13
   };
@@ -5367,7 +5411,7 @@
     _inheritMany(J.JSNumber, [J.JSInt, J.JSNumNotInt]);
     _inheritMany(A.Error, [A.LateError, A.TypeError, A.JsNoSuchMethodError, A.UnknownJsTypeError, A.RuntimeError, A._Error, A.AssertionError, A.ArgumentError, A.UnsupportedError, A.UnimplementedError, A.StateError, A.ConcurrentModificationError]);
     _inherit(A.NullError, A.TypeError);
-    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_drawDots, A.main_renderState, A.main_closure, A.main_closure0]);
+    _inheritMany(A.Closure, [A.Closure0Args, A.Closure2Args, A.TearOffClosure, A.initHooks_closure, A.initHooks_closure1, A._AsyncRun__initializeScheduleImmediate_internalCallback, A._AsyncRun__initializeScheduleImmediate_closure, A._Future__propagateToListeners_handleWhenCompleteCallback_closure, A.Stream_length_closure, A._RootZone_bindUnaryCallbackGuarded_closure, A._EventStreamSubscription_closure, A.main_drawSprite, A.main_renderState, A.main_closure, A.main_closure0]);
     _inheritMany(A.TearOffClosure, [A.StaticClosure, A.BoundClosure]);
     _inheritMany(A.Closure2Args, [A.initHooks_closure0, A._Future__propagateToListeners_handleWhenCompleteCallback_closure0]);
     _inherit(A._TypeError, A._Error);
@@ -5395,7 +5439,7 @@
     typeUniverse: {eC: new Map(), tR: {}, eT: {}, tPV: {}, sEA: []},
     mangledGlobalNames: {int: "int", double: "double", num: "num", String: "String", bool: "bool", Null: "Null", List: "List", Object: "Object", Map: "Map", JSObject: "JSObject"},
     mangledNames: {},
-    types: ["~()", "Null()", "~(~())", "Null(@)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Event)", "~(List<List<int>>{startX:int,startY:int})", "~([String?])", "~(MouseEvent)", "~(Timer)"],
+    types: ["~()", "Null()", "~(~())", "Null(@)", "@(@)", "@(@,String)", "@(String)", "Null(~())", "Null(Object,StackTrace)", "~(Event)", "~(List<List<int>>{offsetX:int,offsetY:int})", "~([String?])", "~(MouseEvent)", "~(Timer)"],
     interceptorsByTag: null,
     leafTags: null,
     arrayRti: Symbol("$ti")
@@ -5606,45 +5650,84 @@
     B.C__RootZone = new A._RootZone();
     B.C__StringStackTrace = new A._StringStackTrace();
     B.Duration_1000000 = new A.Duration(1000000);
+    B.List_XMu = makeConstList([0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_9B3 = makeConstList([0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_PYC = makeConstList([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], type$.JSArray_int);
+    B.List_2yW = makeConstList([1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], type$.JSArray_int);
+    B.List_e0w = makeConstList([1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1], type$.JSArray_int);
+    B.List_V9b = makeConstList([1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1], type$.JSArray_int);
+    B.List_5iY = makeConstList([0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0], type$.JSArray_int);
+    B.List_xeu = makeConstList([0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_Kca = makeConstList([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_PfX = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_PF5 = makeConstList([B.List_XMu, B.List_9B3, B.List_PYC, B.List_2yW, B.List_e0w, B.List_V9b, B.List_5iY, B.List_xeu, B.List_Kca, B.List_PfX], type$.JSArray_List_int);
+    B.List_q9r = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_Mbs = makeConstList([0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_vA0 = makeConstList([0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_p2L = makeConstList([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_zbR = makeConstList([1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_UbV = makeConstList([0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_VoG = makeConstList([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_l71 = makeConstList([0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0], type$.JSArray_int);
+    B.List_3tA = makeConstList([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_wR2 = makeConstList([0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_0Tt = makeConstList([1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_Lkq = makeConstList([1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_jEP = makeConstList([0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1], type$.JSArray_int);
+    B.List_1TJ = makeConstList([0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_DiB = makeConstList([1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_qPt = makeConstList([1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_Pif = makeConstList([B.List_q9r, B.List_Mbs, B.List_vA0, B.List_p2L, B.List_zbR, B.List_UbV, B.List_VoG, B.List_l71, B.List_3tA, B.List_wR2, B.List_0Tt, B.List_Lkq, B.List_jEP, B.List_1TJ, B.List_DiB, B.List_qPt], type$.JSArray_List_int);
     B.List_o0N = makeConstList([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_bQy = makeConstList([0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_zlu = makeConstList([0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_iiy = makeConstList([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0], type$.JSArray_int);
-    B.List_C6Y = makeConstList([0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
-    B.List_ENe = makeConstList([0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0], type$.JSArray_int);
-    B.List_T0R = makeConstList([0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
-    B.List_qUC = makeConstList([0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0], type$.JSArray_int);
-    B.List_tX1 = makeConstList([0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0], type$.JSArray_int);
-    B.List_Ell = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_2qw = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_rUq = makeConstList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_BPv = makeConstList([B.List_o0N, B.List_bQy, B.List_zlu, B.List_iiy, B.List_C6Y, B.List_ENe, B.List_T0R, B.List_qUC, B.List_qUC, B.List_tX1, B.List_Ell, B.List_2qw, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq], type$.JSArray_List_int);
-    B.List_wBs = makeConstList([0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_mpG = makeConstList([0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_wgg = makeConstList([0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
-    B.List_SHY = makeConstList([0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0], type$.JSArray_int);
-    B.List_sKA = makeConstList([0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
-    B.List_ZVW = makeConstList([0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0], type$.JSArray_int);
-    B.List_4pv = makeConstList([0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0], type$.JSArray_int);
-    B.List_7Gb = makeConstList([0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0], type$.JSArray_int);
-    B.List_Na7 = makeConstList([0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0], type$.JSArray_int);
-    B.List_GjU = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
-    B.List_fqn = makeConstList([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_StX = makeConstList([B.List_wBs, B.List_mpG, B.List_wgg, B.List_SHY, B.List_sKA, B.List_ZVW, B.List_4pv, B.List_7Gb, B.List_7Gb, B.List_Na7, B.List_GjU, B.List_fqn, B.List_rUq, B.List_rUq, B.List_rUq, B.List_rUq], type$.JSArray_List_int);
-    B.List_EVh = makeConstList([B.List_BPv, B.List_StX], A.findType("JSArray<List<List<int>>>"));
+    B.List_ZWy = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_xRp = makeConstList([0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_lTH = makeConstList([0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_iTc = makeConstList([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_U6K = makeConstList([1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_cgj = makeConstList([0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_5RL = makeConstList([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0], type$.JSArray_int);
+    B.List_rJM = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_puP = makeConstList([0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_WhY = makeConstList([0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_RGU = makeConstList([0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_xa4 = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_axq = makeConstList([0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_jWV = makeConstList([0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_SB3 = makeConstList([0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_1Tx = makeConstList([B.List_o0N, B.List_ZWy, B.List_xRp, B.List_lTH, B.List_iTc, B.List_U6K, B.List_cgj, B.List_5RL, B.List_rJM, B.List_puP, B.List_WhY, B.List_RGU, B.List_xa4, B.List_axq, B.List_jWV, B.List_SB3], type$.JSArray_List_int);
+    B.List_b8Q = makeConstList([0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_bbK = makeConstList([0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_KMZ = makeConstList([0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_lNm = makeConstList([B.List_q9r, B.List_b8Q, B.List_bbK, B.List_KMZ, B.List_iTc, B.List_U6K, B.List_cgj, B.List_5RL, B.List_rJM, B.List_puP, B.List_WhY, B.List_RGU, B.List_xa4, B.List_axq, B.List_jWV, B.List_SB3], type$.JSArray_List_int);
+    B.List_ZPC = makeConstList([B.List_1Tx, B.List_lNm], A.findType("JSArray<List<List<int>>>"));
+    B.List_v5s = makeConstList([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_Ey7 = makeConstList([0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
+    B.List_aea = makeConstList([0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_LKo = makeConstList([1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_Uln = makeConstList([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_nP5 = makeConstList([0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_u0g = makeConstList([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_rUh = makeConstList([0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_M1V = makeConstList([0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_rHC = makeConstList([0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1], type$.JSArray_int);
+    B.List_YXO = makeConstList([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_Mil = makeConstList([0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0], type$.JSArray_int);
+    B.List_Wz9 = makeConstList([0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0], type$.JSArray_int);
+    B.List_Fcv = makeConstList([0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_by2 = makeConstList([B.List_v5s, B.List_Ey7, B.List_aea, B.List_LKo, B.List_Uln, B.List_nP5, B.List_u0g, B.List_rUh, B.List_M1V, B.List_rHC, B.List_YXO, B.List_Mil, B.List_Wz9, B.List_Fcv], type$.JSArray_List_int);
     B.Duration_0 = new A.Duration(0);
     B.EvolutionMilestone_Digitama_Duration_0 = new A.EvolutionMilestone("Digitama", B.Duration_0);
     B.Duration_10000000 = new A.Duration(10000000);
-    B.EvolutionMilestone_SUe = new A.EvolutionMilestone("Baby I", B.Duration_10000000);
+    B.EvolutionMilestone_Zurumon_Duration_10000000 = new A.EvolutionMilestone("Zurumon", B.Duration_10000000);
     B.Duration_610000000 = new A.Duration(610000000);
-    B.EvolutionMilestone_atO = new A.EvolutionMilestone("Baby II", B.Duration_610000000);
+    B.EvolutionMilestone_Pagumon_Duration_610000000 = new A.EvolutionMilestone("Pagumon", B.Duration_610000000);
     B.Duration_22210000000 = new A.Duration(2221e7);
-    B.EvolutionMilestone_Child_Duration_22210000000 = new A.EvolutionMilestone("Child", B.Duration_22210000000);
+    B.EvolutionMilestone_Gazimon_Duration_22210000000 = new A.EvolutionMilestone("Gazimon", B.Duration_22210000000);
     B.Duration_108610000000 = new A.Duration(10861e7);
-    B.EvolutionMilestone_Adult_Duration_108610000000 = new A.EvolutionMilestone("Adult", B.Duration_108610000000);
+    B.EvolutionMilestone_e4q = new A.EvolutionMilestone("DarkTyrannomon", B.Duration_108610000000);
     B.Duration_238210000000 = new A.Duration(23821e7);
-    B.EvolutionMilestone_Perfect_Duration_238210000000 = new A.EvolutionMilestone("Perfect", B.Duration_238210000000);
-    B.List_phN = makeConstList([B.EvolutionMilestone_Digitama_Duration_0, B.EvolutionMilestone_SUe, B.EvolutionMilestone_atO, B.EvolutionMilestone_Child_Duration_22210000000, B.EvolutionMilestone_Adult_Duration_108610000000, B.EvolutionMilestone_Perfect_Duration_238210000000], A.findType("JSArray<EvolutionMilestone>"));
+    B.EvolutionMilestone_R1J = new A.EvolutionMilestone("MetalTyrannomon", B.Duration_238210000000);
+    B.List_zb2 = makeConstList([B.EvolutionMilestone_Digitama_Duration_0, B.EvolutionMilestone_Zurumon_Duration_10000000, B.EvolutionMilestone_Pagumon_Duration_610000000, B.EvolutionMilestone_Gazimon_Duration_22210000000, B.EvolutionMilestone_e4q, B.EvolutionMilestone_R1J], A.findType("JSArray<EvolutionMilestone>"));
     B.Type_Object_A4p = A.typeLiteral("Object");
   })();
   (function staticFields() {
@@ -5743,11 +5826,11 @@
     hunkHelpers.setOrUpdateInterceptorsByTag({DOMError: J.JavaScriptObject, MediaError: J.JavaScriptObject, NavigatorUserMediaError: J.JavaScriptObject, OverconstrainedError: J.JavaScriptObject, PositionError: J.JavaScriptObject, GeolocationPositionError: J.JavaScriptObject, HTMLAudioElement: A.HtmlElement, HTMLBRElement: A.HtmlElement, HTMLBaseElement: A.HtmlElement, HTMLBodyElement: A.HtmlElement, HTMLContentElement: A.HtmlElement, HTMLDListElement: A.HtmlElement, HTMLDataElement: A.HtmlElement, HTMLDataListElement: A.HtmlElement, HTMLDetailsElement: A.HtmlElement, HTMLDialogElement: A.HtmlElement, HTMLDivElement: A.HtmlElement, HTMLEmbedElement: A.HtmlElement, HTMLFieldSetElement: A.HtmlElement, HTMLHRElement: A.HtmlElement, HTMLHeadElement: A.HtmlElement, HTMLHeadingElement: A.HtmlElement, HTMLHtmlElement: A.HtmlElement, HTMLIFrameElement: A.HtmlElement, HTMLImageElement: A.HtmlElement, HTMLInputElement: A.HtmlElement, HTMLLIElement: A.HtmlElement, HTMLLabelElement: A.HtmlElement, HTMLLegendElement: A.HtmlElement, HTMLLinkElement: A.HtmlElement, HTMLMapElement: A.HtmlElement, HTMLMediaElement: A.HtmlElement, HTMLMenuElement: A.HtmlElement, HTMLMetaElement: A.HtmlElement, HTMLMeterElement: A.HtmlElement, HTMLModElement: A.HtmlElement, HTMLOListElement: A.HtmlElement, HTMLObjectElement: A.HtmlElement, HTMLOptGroupElement: A.HtmlElement, HTMLOptionElement: A.HtmlElement, HTMLOutputElement: A.HtmlElement, HTMLParagraphElement: A.HtmlElement, HTMLParamElement: A.HtmlElement, HTMLPictureElement: A.HtmlElement, HTMLPreElement: A.HtmlElement, HTMLProgressElement: A.HtmlElement, HTMLQuoteElement: A.HtmlElement, HTMLScriptElement: A.HtmlElement, HTMLShadowElement: A.HtmlElement, HTMLSlotElement: A.HtmlElement, HTMLSourceElement: A.HtmlElement, HTMLSpanElement: A.HtmlElement, HTMLStyleElement: A.HtmlElement, HTMLTableCaptionElement: A.HtmlElement, HTMLTableCellElement: A.HtmlElement, HTMLTableDataCellElement: A.HtmlElement, HTMLTableHeaderCellElement: A.HtmlElement, HTMLTableColElement: A.HtmlElement, HTMLTableElement: A.HtmlElement, HTMLTableRowElement: A.HtmlElement, HTMLTableSectionElement: A.HtmlElement, HTMLTemplateElement: A.HtmlElement, HTMLTextAreaElement: A.HtmlElement, HTMLTimeElement: A.HtmlElement, HTMLTitleElement: A.HtmlElement, HTMLTrackElement: A.HtmlElement, HTMLUListElement: A.HtmlElement, HTMLUnknownElement: A.HtmlElement, HTMLVideoElement: A.HtmlElement, HTMLDirectoryElement: A.HtmlElement, HTMLFontElement: A.HtmlElement, HTMLFrameElement: A.HtmlElement, HTMLFrameSetElement: A.HtmlElement, HTMLMarqueeElement: A.HtmlElement, HTMLElement: A.HtmlElement, HTMLAnchorElement: A.AnchorElement, HTMLAreaElement: A.AreaElement, HTMLButtonElement: A.ButtonElement, HTMLCanvasElement: A.CanvasElement, CanvasRenderingContext2D: A.CanvasRenderingContext2D, CDATASection: A.CharacterData, CharacterData: A.CharacterData, Comment: A.CharacterData, ProcessingInstruction: A.CharacterData, Text: A.CharacterData, DOMException: A.DomException, DOMTokenList: A.DomTokenList, MathMLElement: A.Element, Element: A.Element, AbortPaymentEvent: A.Event, AnimationEvent: A.Event, AnimationPlaybackEvent: A.Event, ApplicationCacheErrorEvent: A.Event, BackgroundFetchClickEvent: A.Event, BackgroundFetchEvent: A.Event, BackgroundFetchFailEvent: A.Event, BackgroundFetchedEvent: A.Event, BeforeInstallPromptEvent: A.Event, BeforeUnloadEvent: A.Event, BlobEvent: A.Event, CanMakePaymentEvent: A.Event, ClipboardEvent: A.Event, CloseEvent: A.Event, CustomEvent: A.Event, DeviceMotionEvent: A.Event, DeviceOrientationEvent: A.Event, ErrorEvent: A.Event, ExtendableEvent: A.Event, ExtendableMessageEvent: A.Event, FetchEvent: A.Event, FontFaceSetLoadEvent: A.Event, ForeignFetchEvent: A.Event, GamepadEvent: A.Event, HashChangeEvent: A.Event, InstallEvent: A.Event, MediaEncryptedEvent: A.Event, MediaKeyMessageEvent: A.Event, MediaQueryListEvent: A.Event, MediaStreamEvent: A.Event, MediaStreamTrackEvent: A.Event, MessageEvent: A.Event, MIDIConnectionEvent: A.Event, MIDIMessageEvent: A.Event, MutationEvent: A.Event, NotificationEvent: A.Event, PageTransitionEvent: A.Event, PaymentRequestEvent: A.Event, PaymentRequestUpdateEvent: A.Event, PopStateEvent: A.Event, PresentationConnectionAvailableEvent: A.Event, PresentationConnectionCloseEvent: A.Event, ProgressEvent: A.Event, PromiseRejectionEvent: A.Event, PushEvent: A.Event, RTCDataChannelEvent: A.Event, RTCDTMFToneChangeEvent: A.Event, RTCPeerConnectionIceEvent: A.Event, RTCTrackEvent: A.Event, SecurityPolicyViolationEvent: A.Event, SensorErrorEvent: A.Event, SpeechRecognitionError: A.Event, SpeechRecognitionEvent: A.Event, SpeechSynthesisEvent: A.Event, StorageEvent: A.Event, SyncEvent: A.Event, TrackEvent: A.Event, TransitionEvent: A.Event, WebKitTransitionEvent: A.Event, VRDeviceEvent: A.Event, VRDisplayEvent: A.Event, VRSessionEvent: A.Event, MojoInterfaceRequestEvent: A.Event, ResourceProgressEvent: A.Event, USBConnectionEvent: A.Event, IDBVersionChangeEvent: A.Event, AudioProcessingEvent: A.Event, OfflineAudioCompletionEvent: A.Event, WebGLContextEvent: A.Event, Event: A.Event, InputEvent: A.Event, SubmitEvent: A.Event, EventTarget: A.EventTarget, HTMLFormElement: A.FormElement, MouseEvent: A.MouseEvent, DragEvent: A.MouseEvent, PointerEvent: A.MouseEvent, WheelEvent: A.MouseEvent, Document: A.Node, DocumentFragment: A.Node, HTMLDocument: A.Node, ShadowRoot: A.Node, XMLDocument: A.Node, Attr: A.Node, DocumentType: A.Node, Node: A.Node, HTMLSelectElement: A.SelectElement, CompositionEvent: A.UIEvent, FocusEvent: A.UIEvent, KeyboardEvent: A.UIEvent, TextEvent: A.UIEvent, TouchEvent: A.UIEvent, UIEvent: A.UIEvent, NamedNodeMap: A._NamedNodeMap, MozNamedAttrMap: A._NamedNodeMap, SVGAElement: A.SvgElement, SVGAnimateElement: A.SvgElement, SVGAnimateMotionElement: A.SvgElement, SVGAnimateTransformElement: A.SvgElement, SVGAnimationElement: A.SvgElement, SVGCircleElement: A.SvgElement, SVGClipPathElement: A.SvgElement, SVGDefsElement: A.SvgElement, SVGDescElement: A.SvgElement, SVGDiscardElement: A.SvgElement, SVGEllipseElement: A.SvgElement, SVGFEBlendElement: A.SvgElement, SVGFEColorMatrixElement: A.SvgElement, SVGFEComponentTransferElement: A.SvgElement, SVGFECompositeElement: A.SvgElement, SVGFEConvolveMatrixElement: A.SvgElement, SVGFEDiffuseLightingElement: A.SvgElement, SVGFEDisplacementMapElement: A.SvgElement, SVGFEDistantLightElement: A.SvgElement, SVGFEFloodElement: A.SvgElement, SVGFEFuncAElement: A.SvgElement, SVGFEFuncBElement: A.SvgElement, SVGFEFuncGElement: A.SvgElement, SVGFEFuncRElement: A.SvgElement, SVGFEGaussianBlurElement: A.SvgElement, SVGFEImageElement: A.SvgElement, SVGFEMergeElement: A.SvgElement, SVGFEMergeNodeElement: A.SvgElement, SVGFEMorphologyElement: A.SvgElement, SVGFEOffsetElement: A.SvgElement, SVGFEPointLightElement: A.SvgElement, SVGFESpecularLightingElement: A.SvgElement, SVGFESpotLightElement: A.SvgElement, SVGFETileElement: A.SvgElement, SVGFETurbulenceElement: A.SvgElement, SVGFilterElement: A.SvgElement, SVGForeignObjectElement: A.SvgElement, SVGGElement: A.SvgElement, SVGGeometryElement: A.SvgElement, SVGGraphicsElement: A.SvgElement, SVGImageElement: A.SvgElement, SVGLineElement: A.SvgElement, SVGLinearGradientElement: A.SvgElement, SVGMarkerElement: A.SvgElement, SVGMaskElement: A.SvgElement, SVGMetadataElement: A.SvgElement, SVGPathElement: A.SvgElement, SVGPatternElement: A.SvgElement, SVGPolygonElement: A.SvgElement, SVGPolylineElement: A.SvgElement, SVGRadialGradientElement: A.SvgElement, SVGRectElement: A.SvgElement, SVGScriptElement: A.SvgElement, SVGSetElement: A.SvgElement, SVGStopElement: A.SvgElement, SVGStyleElement: A.SvgElement, SVGElement: A.SvgElement, SVGSVGElement: A.SvgElement, SVGSwitchElement: A.SvgElement, SVGSymbolElement: A.SvgElement, SVGTSpanElement: A.SvgElement, SVGTextContentElement: A.SvgElement, SVGTextElement: A.SvgElement, SVGTextPathElement: A.SvgElement, SVGTextPositioningElement: A.SvgElement, SVGTitleElement: A.SvgElement, SVGUseElement: A.SvgElement, SVGViewElement: A.SvgElement, SVGGradientElement: A.SvgElement, SVGComponentTransferFunctionElement: A.SvgElement, SVGFEDropShadowElement: A.SvgElement, SVGMPathElement: A.SvgElement});
     hunkHelpers.setOrUpdateLeafTags({DOMError: true, MediaError: true, NavigatorUserMediaError: true, OverconstrainedError: true, PositionError: true, GeolocationPositionError: true, HTMLAudioElement: true, HTMLBRElement: true, HTMLBaseElement: true, HTMLBodyElement: true, HTMLContentElement: true, HTMLDListElement: true, HTMLDataElement: true, HTMLDataListElement: true, HTMLDetailsElement: true, HTMLDialogElement: true, HTMLDivElement: true, HTMLEmbedElement: true, HTMLFieldSetElement: true, HTMLHRElement: true, HTMLHeadElement: true, HTMLHeadingElement: true, HTMLHtmlElement: true, HTMLIFrameElement: true, HTMLImageElement: true, HTMLInputElement: true, HTMLLIElement: true, HTMLLabelElement: true, HTMLLegendElement: true, HTMLLinkElement: true, HTMLMapElement: true, HTMLMediaElement: true, HTMLMenuElement: true, HTMLMetaElement: true, HTMLMeterElement: true, HTMLModElement: true, HTMLOListElement: true, HTMLObjectElement: true, HTMLOptGroupElement: true, HTMLOptionElement: true, HTMLOutputElement: true, HTMLParagraphElement: true, HTMLParamElement: true, HTMLPictureElement: true, HTMLPreElement: true, HTMLProgressElement: true, HTMLQuoteElement: true, HTMLScriptElement: true, HTMLShadowElement: true, HTMLSlotElement: true, HTMLSourceElement: true, HTMLSpanElement: true, HTMLStyleElement: true, HTMLTableCaptionElement: true, HTMLTableCellElement: true, HTMLTableDataCellElement: true, HTMLTableHeaderCellElement: true, HTMLTableColElement: true, HTMLTableElement: true, HTMLTableRowElement: true, HTMLTableSectionElement: true, HTMLTemplateElement: true, HTMLTextAreaElement: true, HTMLTimeElement: true, HTMLTitleElement: true, HTMLTrackElement: true, HTMLUListElement: true, HTMLUnknownElement: true, HTMLVideoElement: true, HTMLDirectoryElement: true, HTMLFontElement: true, HTMLFrameElement: true, HTMLFrameSetElement: true, HTMLMarqueeElement: true, HTMLElement: false, HTMLAnchorElement: true, HTMLAreaElement: true, HTMLButtonElement: true, HTMLCanvasElement: true, CanvasRenderingContext2D: true, CDATASection: true, CharacterData: true, Comment: true, ProcessingInstruction: true, Text: true, DOMException: true, DOMTokenList: true, MathMLElement: true, Element: false, AbortPaymentEvent: true, AnimationEvent: true, AnimationPlaybackEvent: true, ApplicationCacheErrorEvent: true, BackgroundFetchClickEvent: true, BackgroundFetchEvent: true, BackgroundFetchFailEvent: true, BackgroundFetchedEvent: true, BeforeInstallPromptEvent: true, BeforeUnloadEvent: true, BlobEvent: true, CanMakePaymentEvent: true, ClipboardEvent: true, CloseEvent: true, CustomEvent: true, DeviceMotionEvent: true, DeviceOrientationEvent: true, ErrorEvent: true, ExtendableEvent: true, ExtendableMessageEvent: true, FetchEvent: true, FontFaceSetLoadEvent: true, ForeignFetchEvent: true, GamepadEvent: true, HashChangeEvent: true, InstallEvent: true, MediaEncryptedEvent: true, MediaKeyMessageEvent: true, MediaQueryListEvent: true, MediaStreamEvent: true, MediaStreamTrackEvent: true, MessageEvent: true, MIDIConnectionEvent: true, MIDIMessageEvent: true, MutationEvent: true, NotificationEvent: true, PageTransitionEvent: true, PaymentRequestEvent: true, PaymentRequestUpdateEvent: true, PopStateEvent: true, PresentationConnectionAvailableEvent: true, PresentationConnectionCloseEvent: true, ProgressEvent: true, PromiseRejectionEvent: true, PushEvent: true, RTCDataChannelEvent: true, RTCDTMFToneChangeEvent: true, RTCPeerConnectionIceEvent: true, RTCTrackEvent: true, SecurityPolicyViolationEvent: true, SensorErrorEvent: true, SpeechRecognitionError: true, SpeechRecognitionEvent: true, SpeechSynthesisEvent: true, StorageEvent: true, SyncEvent: true, TrackEvent: true, TransitionEvent: true, WebKitTransitionEvent: true, VRDeviceEvent: true, VRDisplayEvent: true, VRSessionEvent: true, MojoInterfaceRequestEvent: true, ResourceProgressEvent: true, USBConnectionEvent: true, IDBVersionChangeEvent: true, AudioProcessingEvent: true, OfflineAudioCompletionEvent: true, WebGLContextEvent: true, Event: false, InputEvent: false, SubmitEvent: false, EventTarget: false, HTMLFormElement: true, MouseEvent: true, DragEvent: true, PointerEvent: true, WheelEvent: true, Document: true, DocumentFragment: true, HTMLDocument: true, ShadowRoot: true, XMLDocument: true, Attr: true, DocumentType: true, Node: false, HTMLSelectElement: true, CompositionEvent: true, FocusEvent: true, KeyboardEvent: true, TextEvent: true, TouchEvent: true, UIEvent: false, NamedNodeMap: true, MozNamedAttrMap: true, SVGAElement: true, SVGAnimateElement: true, SVGAnimateMotionElement: true, SVGAnimateTransformElement: true, SVGAnimationElement: true, SVGCircleElement: true, SVGClipPathElement: true, SVGDefsElement: true, SVGDescElement: true, SVGDiscardElement: true, SVGEllipseElement: true, SVGFEBlendElement: true, SVGFEColorMatrixElement: true, SVGFEComponentTransferElement: true, SVGFECompositeElement: true, SVGFEConvolveMatrixElement: true, SVGFEDiffuseLightingElement: true, SVGFEDisplacementMapElement: true, SVGFEDistantLightElement: true, SVGFEFloodElement: true, SVGFEFuncAElement: true, SVGFEFuncBElement: true, SVGFEFuncGElement: true, SVGFEFuncRElement: true, SVGFEGaussianBlurElement: true, SVGFEImageElement: true, SVGFEMergeElement: true, SVGFEMergeNodeElement: true, SVGFEMorphologyElement: true, SVGFEOffsetElement: true, SVGFEPointLightElement: true, SVGFESpecularLightingElement: true, SVGFESpotLightElement: true, SVGFETileElement: true, SVGFETurbulenceElement: true, SVGFilterElement: true, SVGForeignObjectElement: true, SVGGElement: true, SVGGeometryElement: true, SVGGraphicsElement: true, SVGImageElement: true, SVGLineElement: true, SVGLinearGradientElement: true, SVGMarkerElement: true, SVGMaskElement: true, SVGMetadataElement: true, SVGPathElement: true, SVGPatternElement: true, SVGPolygonElement: true, SVGPolylineElement: true, SVGRadialGradientElement: true, SVGRectElement: true, SVGScriptElement: true, SVGSetElement: true, SVGStopElement: true, SVGStyleElement: true, SVGElement: true, SVGSVGElement: true, SVGSwitchElement: true, SVGSymbolElement: true, SVGTSpanElement: true, SVGTextContentElement: true, SVGTextElement: true, SVGTextPathElement: true, SVGTextPositioningElement: true, SVGTitleElement: true, SVGUseElement: true, SVGViewElement: true, SVGGradientElement: true, SVGComponentTransferFunctionElement: true, SVGFEDropShadowElement: true, SVGMPathElement: true});
   })();
-  Function.prototype.call$0 = function() {
-    return this();
-  };
   Function.prototype.call$1 = function(a) {
     return this(a);
+  };
+  Function.prototype.call$0 = function() {
+    return this();
   };
   Function.prototype.call$2 = function(a, b) {
     return this(a, b);

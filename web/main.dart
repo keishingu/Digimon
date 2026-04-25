@@ -26,50 +26,118 @@ class MonsterState {
 
 const List<EvolutionMilestone> milestones = [
   EvolutionMilestone('Digitama', Duration.zero),
-  EvolutionMilestone('Baby I', Duration(seconds: 10)),
-  EvolutionMilestone('Baby II', Duration(minutes: 10, seconds: 10)),
-  EvolutionMilestone('Child', Duration(hours: 6, minutes: 10, seconds: 10)),
-  EvolutionMilestone('Adult', Duration(hours: 30, minutes: 10, seconds: 10)),
-  EvolutionMilestone('Perfect', Duration(hours: 66, minutes: 10, seconds: 10)),
+  EvolutionMilestone('Zurumon', Duration(seconds: 10)),
+  EvolutionMilestone('Pagumon', Duration(minutes: 10, seconds: 10)),
+  EvolutionMilestone('Gazimon', Duration(hours: 6, minutes: 10, seconds: 10)),
+  EvolutionMilestone('DarkTyrannomon', Duration(hours: 30, minutes: 10, seconds: 10)),
+  EvolutionMilestone('MetalTyrannomon', Duration(hours: 66, minutes: 10, seconds: 10)),
 ];
 
-const List<List<List<int>>> digitamaWaitingDots = [
+const List<List<List<int>>> zurumonFrames = [
   [
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0],
-    [0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0],
-    [0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0],
-    [0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
-    [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-    [0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-    [0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,0,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0],
+    [0,0,1,1,1,1,0,0,1,1,1,1,1,1,0,0],
+    [1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0],
+    [1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0],
+    [0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0],
+    [0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,0],
+    [0,0,1,0,1,1,1,0,1,1,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+    [0,1,1,0,1,1,1,1,0,0,0,0,1,1,1,1],
+    [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1],
+    [0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
   ],
   [
-    [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0],
-    [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0],
-    [0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0],
-    [0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0],
-    [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0,0,0,0,1,1,1,1,1,1,0,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,0,1,0,0,0],
+    [0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,0],
+    [0,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0],
+    [1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0],
+    [1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0],
+    [0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0],
+    [0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,0],
+    [0,0,1,0,1,1,1,0,1,1,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+    [0,1,1,0,1,1,1,1,0,0,0,0,1,1,1,1],
+    [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+    [0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1],
+    [0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
   ],
+];
+
+const List<List<int>> pagumonSprite = [
+  [0,0,0,0,1,1,1,1,1,1,0,1,1,0,0,0],
+  [0,0,0,1,1,1,1,0,0,1,1,0,1,0,0,0],
+  [0,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+  [1,1,1,1,1,0,1,1,1,1,0,1,0,1,0,0],
+  [0,1,0,0,0,0,0,1,1,1,0,1,1,0,0,0],
+  [0,0,1,1,1,1,1,1,1,1,0,0,1,1,1,0],
+  [0,0,0,0,1,0,1,1,0,1,0,1,1,0,1,0],
+  [0,0,0,1,0,0,1,1,0,0,1,1,1,1,1,0],
+  [0,1,0,1,1,0,0,0,1,1,1,1,0,1,0,0],
+  [1,1,0,1,1,1,0,0,1,1,1,1,0,1,0,1],
+  [1,1,0,1,1,0,0,0,0,0,0,0,1,1,1,1],
+  [0,0,0,0,1,1,0,1,0,1,1,0,0,0,1,1],
+  [0,1,1,1,0,1,1,0,1,1,1,1,1,1,1,0],
+  [1,0,1,1,1,0,1,1,1,1,0,1,0,1,0,1],
+  [1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1],
+];
+
+const List<List<int>> gazimonSprite = [
+  [0,0,0,0,1,1,1,1,1,1,0,1,1,0,0,0],
+  [0,0,0,1,1,1,1,1,1,1,1,0,1,0,0,0],
+  [0,0,0,1,1,1,1,0,0,1,1,1,0,0,0,0],
+  [0,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0],
+  [1,1,1,1,1,0,1,1,1,1,1,1,1,0,0,0],
+  [0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0],
+  [0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0],
+  [0,0,0,0,0,1,1,1,0,0,1,1,1,1,1,0],
+  [0,0,1,0,1,1,1,0,1,1,1,1,1,1,0,0],
+  [0,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1],
+  [0,1,1,0,1,1,1,1,0,0,0,0,1,1,1,1],
+  [0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1],
+  [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+  [0,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1],
+  [0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
+];
+
+const List<List<int>> darkTyrannomonSprite = [
+  [0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0],
+  [0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0],
+  [0,1,0,0,0,0,1,1,0,0,0,0,1,0,0,0],
+  [1,0,0,0,0,1,0,1,1,0,0,0,0,1,0,0],
+  [1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0],
+  [0,1,1,1,1,0,0,0,0,0,1,0,0,1,0,0],
+  [0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
+  [0,0,1,1,1,1,0,0,1,1,0,0,1,0,0,0],
+  [0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0],
+  [0,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1],
+  [0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1],
+  [0,0,1,1,1,1,0,0,0,1,0,0,1,0,1,0],
+  [0,1,0,1,0,1,1,1,1,0,1,0,0,1,0,0],
+  [0,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0],
+];
+
+const List<List<int>> metalTyrannomonSprite = [
+  [0,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0],
+  [0,0,1,0,1,1,1,1,1,1,0,0,1,1,0,0],
+  [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+  [1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1],
+  [1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,1],
+  [1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,1],
+  [0,1,1,0,0,0,1,0,0,0,0,0,0,1,1,0],
+  [0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0],
+  [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0],
+  [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
 ];
 
 String formatRemaining(Duration duration) {
@@ -77,12 +145,8 @@ String formatRemaining(Duration duration) {
   final hours = duration.inHours;
   final minutes = duration.inMinutes.remainder(60);
   final seconds = duration.inSeconds.remainder(60);
-  if (hours > 0) {
-    return '${hours}時間${minutes}分';
-  }
-  if (minutes > 0) {
-    return '${minutes}分${seconds}秒';
-  }
+  if (hours > 0) return '${hours}時間${minutes}分';
+  if (minutes > 0) return '${minutes}分${seconds}秒';
   return '${seconds}秒';
 }
 
@@ -110,15 +174,15 @@ void main() {
     lastEvent: '誕生しました',
   );
 
-  int waitingFrame = 0;
+  int frame = 0;
 
-  void drawDots(List<List<int>> dots, {int startX = 0, int startY = 0}) {
+  void drawSprite(List<List<int>> dots, {int offsetX = 0, int offsetY = 0}) {
     if (ctx == null) return;
     ctx.fillStyle = '#111827';
     for (var y = 0; y < dots.length; y++) {
       for (var x = 0; x < dots[y].length; x++) {
         if (dots[y][x] == 1) {
-          ctx.fillRect(startX + x * 11, startY + y * 11, 10, 10);
+          ctx.fillRect(offsetX + x * 11, offsetY + y * 11, 10, 10);
         }
       }
     }
@@ -127,8 +191,28 @@ void main() {
   void renderCurrentFrame() {
     if (ctx == null) return;
     ctx.clearRect(0, 0, 200, 200);
-    drawDots(digitamaWaitingDots[waitingFrame % digitamaWaitingDots.length]);
-    waitingFrame += 1;
+
+    switch (current.stage) {
+      case 'Zurumon':
+        drawSprite(zurumonFrames[frame % zurumonFrames.length], offsetX: 12, offsetY: 12);
+        break;
+      case 'Pagumon':
+        drawSprite(pagumonSprite, offsetX: frame.isEven ? 6 : 10, offsetY: 12);
+        break;
+      case 'Gazimon':
+        drawSprite(gazimonSprite, offsetX: frame.isEven ? 4 : 8, offsetY: 12);
+        break;
+      case 'DarkTyrannomon':
+        drawSprite(darkTyrannomonSprite, offsetX: frame.isEven ? 8 : 12, offsetY: 22);
+        break;
+      case 'MetalTyrannomon':
+        drawSprite(metalTyrannomonSprite, offsetX: frame.isEven ? 12 : 16, offsetY: 42);
+        break;
+      default:
+        drawSprite(zurumonFrames[frame % zurumonFrames.length], offsetX: 12, offsetY: 12);
+        break;
+    }
+    frame += 1;
   }
 
   void updateStageByTime() {
@@ -156,11 +240,11 @@ void main() {
     stageLabel?.text = current.stage;
     hunger?.text = 'なし';
     vitality?.text = 'なし';
-    mode?.text = formatRemaining(remaining);
+    mode?.text = current.stage == milestones.last.stage ? '最終段階' : formatRemaining(remaining);
 
     status?.text = prefix == null
-        ? '${current.lastEvent} / 次の進化まで ${formatRemaining(remaining)}'
-        : '$prefix / 次の進化まで ${formatRemaining(remaining)}';
+        ? '${current.lastEvent} / ${current.stage == milestones.last.stage ? '最終段階に到達しました' : '次の進化まで ${formatRemaining(remaining)}'}'
+        : '$prefix / ${current.stage == milestones.last.stage ? '最終段階に到達しました' : '次の進化まで ${formatRemaining(remaining)}'}';
   }
 
   legacyFeed
@@ -185,10 +269,10 @@ void main() {
   });
 
   Timer.periodic(const Duration(seconds: 1), (_) {
-    renderCurrentFrame();
     renderState();
+    renderCurrentFrame();
   });
 
-  renderCurrentFrame();
   renderState('観察を開始しました');
+  renderCurrentFrame();
 }
