@@ -1,5 +1,4 @@
 import 'dart:html';
-import 'dart:js_util' as js_util;
 
 class MonsterState {
   MonsterState({
@@ -159,7 +158,6 @@ void main() {
   int feedFrame = 0;
   bool showShoutFlash = false;
 
-  Object? digimonApp() => js_util.getProperty<Object?>(window, 'digimonApp');
 
   void drawDots(List<List<int>> dots, {int startX = 0, int startY = 0}) {
     if (ctx == null) return;
@@ -198,21 +196,6 @@ void main() {
     showShoutFlash = !showShoutFlash;
   }
 
-  void syncToJs() {
-    final app = digimonApp();
-    if (app == null) return;
-
-    js_util.callMethod(app, 'setState', [
-      js_util.jsify({
-        'stage': current.stage,
-        'hunger': current.hunger,
-        'vitality': current.vitality,
-        'mode': current.mode,
-        'lastAction': current.lastAction,
-        'actionCount': current.actionCount,
-      })
-    ]);
-  }
 
   void updateEvolution() {
     if (current.stage == 'Digitama' && current.actionCount >= 3) {
@@ -259,7 +242,6 @@ void main() {
     }
 
     updateEvolution();
-    syncToJs();
     renderState(message);
   }
 
@@ -285,7 +267,6 @@ void main() {
     renderState(panelVisible ? 'Dart panel visible' : 'Dart panel hidden');
   });
 
-  syncToJs();
   renderWaitingFrame();
   renderState('Dart ready ✅');
 }
