@@ -97,25 +97,25 @@ void main() {
     ctx.clearRect(0, 0, 200, 200);
     switch (current.stage) {
       case 'Digitama':
-        drawSprite(digitamaSprite, offsetX: frame.isEven ? 18 : 22, offsetY: 18);
+        drawSprite(digitamaSprite, offsetX: 18, offsetY: 18);
         break;
       case 'Zurumon':
-        drawSprite(zurumonSprite, offsetX: frame.isEven ? 12 : 16, offsetY: 18);
+        drawSprite(zurumonSprite, offsetX: 12, offsetY: 18);
         break;
       case 'Pagumon':
-        drawSprite(pagumonSprite, offsetX: frame.isEven ? 12 : 16, offsetY: 18);
+        drawSprite(pagumonSprite, offsetX: 12, offsetY: 18);
         break;
       case 'Gazimon':
-        drawSprite(gazimonSprite, offsetX: frame.isEven ? 8 : 12, offsetY: 18);
+        drawSprite(gazimonSprite, offsetX: 8, offsetY: 18);
         break;
       case 'DarkTyrannomon':
-        drawSprite(darkTyrannomonSprite, offsetX: frame.isEven ? 8 : 12, offsetY: 18);
+        drawSprite(darkTyrannomonSprite, offsetX: 8, offsetY: 18);
         break;
       case 'MetalTyrannomon':
-        drawSprite(metalTyrannomonSprite, offsetX: frame.isEven ? 8 : 12, offsetY: 18);
+        drawSprite(metalTyrannomonSprite, offsetX: 8, offsetY: 18);
         break;
       default:
-        drawSprite(digitamaSprite, offsetX: frame.isEven ? 18 : 22, offsetY: 18);
+        drawSprite(digitamaSprite, offsetX: 18, offsetY: 18);
         break;
     }
     frame += 1;
