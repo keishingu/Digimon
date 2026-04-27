@@ -5310,7 +5310,7 @@
           t1.call$3$offsetX$offsetY(B.List_gWr, 12, 18);
           break;
         case "Pagumon":
-          t1.call$3$offsetX$offsetY(B.List_Pif, 12, 18);
+          t1.call$3$offsetX$offsetY(B.List_PF5, 12, 18);
           break;
         case "Gazimon":
           t1.call$3$offsetX$offsetY(B.List_lNm, 8, 18);
@@ -5319,7 +5319,7 @@
           t1.call$3$offsetX$offsetY(B.List_by2, 8, 18);
           break;
         case "MetalTyrannomon":
-          t1.call$3$offsetX$offsetY(B.List_PF5, 8, 18);
+          t1.call$3$offsetX$offsetY(B.List_Pif, 8, 18);
           break;
         default:
           t1.call$3$offsetX$offsetY(B.List_qDs, 18, 18);
