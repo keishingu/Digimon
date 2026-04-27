@@ -5310,7 +5310,7 @@
           t1.call$3$offsetX$offsetY(B.List_gWr, 12, 18);
           break;
         case "Pagumon":
-          t1.call$3$offsetX$offsetY(B.List_00F, 12, 18);
+          t1.call$3$offsetX$offsetY(B.List_8rs, 12, 18);
           break;
         case "Gazimon":
           t1.call$3$offsetX$offsetY(B.List_by2, 8, 18);
@@ -5722,10 +5722,8 @@
     B.Duration_10000000 = new A.Duration(10000000);
     B.Duration_21600000000 = new A.Duration(216e8);
     B.Duration_600000000 = new A.Duration(600000000);
-    B.List_rUq = makeConstList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_SxV = makeConstList([0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_5RH = makeConstList([0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
-    B.List_j14 = makeConstList([0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
+    B.List_w61 = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0], type$.JSArray_int);
+    B.List_Mbs = makeConstList([0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0], type$.JSArray_int);
     B.List_vA0 = makeConstList([0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
     B.List_p2L = makeConstList([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
     B.List_zbR = makeConstList([1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0], type$.JSArray_int);
@@ -5736,7 +5734,11 @@
     B.List_wR2 = makeConstList([0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0], type$.JSArray_int);
     B.List_0Tt = makeConstList([1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1], type$.JSArray_int);
     B.List_Lkq = makeConstList([1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1], type$.JSArray_int);
-    B.List_00F = makeConstList([B.List_rUq, B.List_rUq, B.List_rUq, B.List_SxV, B.List_5RH, B.List_j14, B.List_vA0, B.List_p2L, B.List_zbR, B.List_UbV, B.List_VoG, B.List_l71, B.List_3tA, B.List_wR2, B.List_0Tt, B.List_Lkq], type$.JSArray_List_int);
+    B.List_jEP = makeConstList([0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1], type$.JSArray_int);
+    B.List_1TJ = makeConstList([0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0], type$.JSArray_int);
+    B.List_DiB = makeConstList([1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1], type$.JSArray_int);
+    B.List_qPt = makeConstList([1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1], type$.JSArray_int);
+    B.List_8rs = makeConstList([B.List_w61, B.List_Mbs, B.List_vA0, B.List_p2L, B.List_zbR, B.List_UbV, B.List_VoG, B.List_l71, B.List_3tA, B.List_wR2, B.List_0Tt, B.List_Lkq, B.List_jEP, B.List_1TJ, B.List_DiB, B.List_qPt], type$.JSArray_List_int);
     B.List_XMu = makeConstList([0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], type$.JSArray_int);
     B.List_9B3 = makeConstList([0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0], type$.JSArray_int);
     B.List_PYC = makeConstList([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], type$.JSArray_int);
@@ -5763,6 +5765,7 @@
     B.List_Wz9 = makeConstList([0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0], type$.JSArray_int);
     B.List_Fcv = makeConstList([0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0], type$.JSArray_int);
     B.List_by2 = makeConstList([B.List_v5s, B.List_Ey7, B.List_aea, B.List_LKo, B.List_Uln, B.List_nP5, B.List_u0g, B.List_rUh, B.List_M1V, B.List_rHC, B.List_YXO, B.List_Mil, B.List_Wz9, B.List_Fcv], type$.JSArray_List_int);
+    B.List_rUq = makeConstList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
     B.List_o0N = makeConstList([0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], type$.JSArray_int);
     B.List_ERz = makeConstList([0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
     B.List_2qw = makeConstList([0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], type$.JSArray_int);
