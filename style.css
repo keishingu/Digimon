@@ -1,65 +1,191 @@
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #0f172a;
+}
+
+#app-shell {
+    width: min(860px, calc(100vw - 24px));
+}
+
+#status-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.9);
+    color: #e2e8f0;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #22c55e33;
+    color: #86efac;
+    font-size: 13px;
+    font-weight: 600;
+}
+
 #main {
-    position:relative;
-    width:380px;
-    height:270px;
+    position: relative;
+    width: 380px;
+    height: 270px;
     border-radius: 5px;
-    //background-color: #009944;
     background: -webkit-gradient(linear, left top, left bottom, from(#4d8), color-stop(0.01, #1a5), color-stop(0.5, #1a5), color-stop(0.99, #094), to(#083));
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.4) ;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.4);
 }
 
 #jail {
-    position:relative;
-    top:20px;
-    left:20px;
-    width:210px;
-    height:210px;
-    border:solid 10px #ffcb03;
+    position: relative;
+    top: 20px;
+    left: 20px;
+    width: 210px;
+    height: 210px;
+    border: solid 10px #ffcb03;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.8) inset;
-    float:left;
+    float: left;
 }
 
 #monitor {
-    position:relative;
-    top:5px;
-    left:5px;
+    position: relative;
+    top: 5px;
+    left: 5px;
     background-color: #eee7e0;
     background-image: url("background.png");
-    width:200px;
-    height:200px;
+    width: 200px;
+    height: 200px;
     border-radius: 20px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4) inset;
 }
+
 #sample {
-    position:absolute;
-    top:0px;
-    left:0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
-#buttons {
-    //float:left;
-}
 button {
     margin-top: 30px;
     margin-left: 60px;
-    width:50px;
-    height:50px;
+    width: 50px;
+    height: 50px;
     border: solid 5px #006611;
     list-style-type: none;
     background-color: #ffcb03;
     border-radius: 30px;
     box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.4) inset;
 }
+
 button:hover {
     box-shadow: none;
 }
+
 button:active {
-  	box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.8) inset;    
+    box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.8) inset;
 }
 
-@media screen and (max-width: 400px) {
-	#main{
-		-webkit-transform: rotate(90deg) translate(60px,50px);
-		-moz-transform: rotate(90deg) translate(60px,50px);
-	}
+#dart-panel {
+    margin-top: 16px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.72);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+#dart-panel.collapsed p,
+#dart-panel.collapsed .actions {
+    display: none;
+}
+
+#dart-panel p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+}
+
+#status-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.status-card {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+}
+
+.status-card .label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.status-card strong {
+    font-size: 18px;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.secondary {
+    margin: 0;
+    width: auto;
+    height: auto;
+    padding: 10px 14px;
+    border-radius: 999px;
+    color: #e2e8f0;
+    background: #0f172a;
+    border: none;
+    box-shadow: none;
+    font-size: 14px;
+}
+
+@media screen and (max-width: 520px) {
+    body {
+        padding: 12px;
+    }
+
+    #app-shell {
+        width: 100%;
+    }
+
+    #status-bar {
+        border-radius: 16px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #main {
+        margin: 0 auto;
+        transform: scale(0.92);
+        transform-origin: top center;
+    }
+}
+
+#debug-panel {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #cbd5e1;
+}
+
+.debug-label {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
 }

@@ -1,28 +1,69 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>DIGITAL MONSTER</title>
-	<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DIGITAL MONSTER v2</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-	<div id="main">
-	
-		<div id="jail">
-			<div id="monitor">
-				<canvas id='sample' width="200px" height="200px"></canvas>
-			</div>
-		</div>
-		
-		<div id="buttons">
-			<button id="buttonA"></button>
-			<button id="buttonB"></button>
-			<button id="buttonC"></button>
-		</div>
-		
-	</div>
-	
-	<script src="script.js"></script>
+  <div id="app-shell">
+    <div id="status-bar">
+      <span class="badge">Digital Monster v2 [build: 2026-04-27 gazimon-swap]</span>
+      <span id="dart-status">Loading Dart…</span>
+    </div>
+
+    <div id="main">
+      <div id="jail">
+        <div id="monitor">
+          <canvas id="sample" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <div id="buttons">
+        <button id="buttonA" type="button" aria-label="Action A"></button>
+        <button id="buttonB" type="button" aria-label="Action B"></button>
+        <button id="buttonC" type="button" aria-label="Action C"></button>
+      </div>
+    </div>
+
+    <div id="dart-panel">
+      <p>
+        時間の経過にあわせて進化していくデジモンを観察できます。
+      </p>
+      <div id="status-cards">
+        <div class="status-card">
+          <span class="label">成長段階</span>
+          <strong id="stat-stage">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">空腹度</span>
+          <strong id="stat-hunger">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">体力</span>
+          <strong id="stat-vitality">-</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">状態</span>
+          <strong id="stat-mode">-</strong>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="dart-toggle" class="secondary" type="button">表示切替</button>
+      </div>
+      <div id="debug-panel">
+        <span class="debug-label">デバッグ</span>
+        <div class="actions">
+          <button id="debug-plus-10s" class="secondary" type="button">+10秒</button>
+          <button id="debug-plus-10m" class="secondary" type="button">+10分</button>
+          <button id="debug-plus-6h" class="secondary" type="button">+6時間</button>
+          <button id="debug-reset-time" class="secondary" type="button">リセット</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="main.dart.js"></script>
 </body>
 </html>
