@@ -1,5 +1,8 @@
 .DS_Store
 .dart_tool/
 .packages
-main.dart.js.deps
-main.dart.js.map
+.idea/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
