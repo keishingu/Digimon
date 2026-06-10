@@ -1,6 +1,21 @@
 name: digimon_v2
+description: デジモン育成シミュレーター（Flutter版）
 publish_to: 'none'
+version: 1.0.0+1
+
 environment:
-  sdk: ^3.11.0
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
 dev_dependencies:
-  lints: ^6.1.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - background.png
