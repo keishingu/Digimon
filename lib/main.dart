@@ -14,15 +14,21 @@ class MonsterState {
     required this.stage,
     required this.startedAt,
     required this.nextEvolutionAt,
-    required this.mode,
     required this.lastEvent,
+    required this.hunger,
+    required this.strength,
+    required this.nextHungerDecayAt,
+    required this.nextStrengthDecayAt,
   });
 
   String stage;
   DateTime startedAt;
   DateTime nextEvolutionAt;
-  String mode;
   String lastEvent;
+  int hunger; // 0..4
+  int strength; // 0..4
+  DateTime nextHungerDecayAt;
+  DateTime nextStrengthDecayAt;
 }
 
 const List<EvolutionMilestone> milestones = [
@@ -33,6 +39,12 @@ const List<EvolutionMilestone> milestones = [
   EvolutionMilestone('DarkTyrannomon', Duration(hours: 30, minutes: 10, seconds: 10)),
   EvolutionMilestone('MetalTyrannomon', Duration(hours: 66, minutes: 10, seconds: 10)),
 ];
+
+const int maxHearts = 4;
+const Duration hungerDecayInterval = Duration(minutes: 3);
+const Duration strengthDecayInterval = Duration(minutes: 4);
+
+enum FoodKind { meat, protein }
 
 // ---- Sprites ---------------------------------------------------------------
 
@@ -98,6 +110,73 @@ const List<List<int>> metalTyrannomonSprite = [
   [1,0,1,1,1,0,1,1,1,1,0,1,0,1,0,1],[1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1],
 ];
 
+// 食事シーン用のドット絵（8x8）。かじられて3段階で小さくなる。
+const List<List<List<int>>> meatSprites = [
+  [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,0,0],
+    [0,0,1,1,1,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,1,1,1,0,0],
+  ],
+  [
+    [0,0,1,1,1,0,0,0],
+    [0,1,1,1,1,0,0,0],
+    [1,1,1,1,1,0,0,0],
+    [1,1,1,1,0,0,0,0],
+    [0,1,1,1,0,0,0,0],
+    [0,0,1,1,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,1,1,1,0,0],
+  ],
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,0,1,1,0,0,0,0],
+    [0,1,1,0,0,0,0,0],
+    [0,1,1,0,0,0,0,0],
+    [0,0,1,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,1,1,1,0,0],
+  ],
+];
+
+const List<List<List<int>>> proteinSprites = [
+  [
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,0],
+  ],
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,1,1,1,1,1,0],
+  ],
+  [
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,0,1,1,0,1,0],
+    [0,1,1,1,1,1,1,0],
+  ],
+];
+
 // ---- Utilities -------------------------------------------------------------
 
 String formatRemaining(Duration duration) {
@@ -109,6 +188,8 @@ String formatRemaining(Duration duration) {
   if (minutes > 0) return '${minutes}分${seconds}秒';
   return '${seconds}秒';
 }
+
+String heartsText(int value) => '♥' * value + '♡' * (maxHearts - value);
 
 ({List<List<int>> sprite, int offsetX, int offsetY}) spriteForStage(String stage) {
   switch (stage) {
@@ -162,7 +243,13 @@ class DigimonScreen extends StatefulWidget {
 class _DigimonScreenState extends State<DigimonScreen> {
   late MonsterState _current;
   Timer? _timer;
+  Timer? _eatTimer;
   bool _panelVisible = true;
+  bool _idleShift = false;
+  bool _eating = false;
+  int _eatFrame = 0;
+  FoodKind? _eatingFood;
+  int _menuIndex = -1; // -1: メニュー非表示, 0: ごはん, 1: プロテイン
 
   @override
   void initState() {
@@ -172,27 +259,46 @@ class _DigimonScreenState extends State<DigimonScreen> {
       stage: milestones.first.stage,
       startedAt: now,
       nextEvolutionAt: now.add(milestones[1].elapsed),
-      mode: 'observe',
       lastEvent: '誕生しました',
+      hunger: maxHearts,
+      strength: maxHearts,
+      nextHungerDecayAt: now.add(hungerDecayInterval),
+      nextStrengthDecayAt: now.add(strengthDecayInterval),
     );
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(_updateStageByTime);
+      setState(() {
+        _updateStageByTime();
+        _updateNeedsByTime();
+        if (!_eating) _idleShift = !_idleShift;
+      });
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _eatTimer?.cancel();
     super.dispose();
   }
+
+  bool get _isEgg => _current.stage == milestones.first.stage;
 
   void _updateStageByTime() {
     final elapsed = DateTime.now().difference(_current.startedAt);
     for (var i = milestones.length - 1; i >= 0; i--) {
       if (elapsed >= milestones[i].elapsed) {
         if (_current.stage != milestones[i].stage) {
+          final wasEgg = _isEgg;
           _current.stage = milestones[i].stage;
           _current.lastEvent = '${milestones[i].stage}に進化しました';
+          if (wasEgg) {
+            // 孵化した直後はおなかをすかせている
+            final now = DateTime.now();
+            _current.hunger = 2;
+            _current.strength = 2;
+            _current.nextHungerDecayAt = now.add(hungerDecayInterval);
+            _current.nextStrengthDecayAt = now.add(strengthDecayInterval);
+          }
         }
         final nextIndex = i + 1;
         _current.nextEvolutionAt = _current.startedAt.add(
@@ -205,18 +311,141 @@ class _DigimonScreenState extends State<DigimonScreen> {
     }
   }
 
+  void _updateNeedsByTime() {
+    if (_isEgg) return;
+    final now = DateTime.now();
+    while (!now.isBefore(_current.nextHungerDecayAt)) {
+      if (_current.hunger > 0) {
+        _current.hunger--;
+        if (_current.hunger == 0) {
+          _current.lastEvent = 'おなかをすかせて呼んでいます';
+        }
+      }
+      _current.nextHungerDecayAt =
+          _current.nextHungerDecayAt.add(hungerDecayInterval);
+    }
+    while (!now.isBefore(_current.nextStrengthDecayAt)) {
+      if (_current.strength > 0) {
+        _current.strength--;
+        if (_current.strength == 0) {
+          _current.lastEvent = '元気がなくなっています';
+        }
+      }
+      _current.nextStrengthDecayAt =
+          _current.nextStrengthDecayAt.add(strengthDecayInterval);
+    }
+  }
+
+  // ---- 食事 ----------------------------------------------------------------
+
+  void _feed(FoodKind kind) {
+    if (_eating) return;
+    if (_isEgg) {
+      setState(() => _current.lastEvent = 'まだデジタマのようです');
+      return;
+    }
+    if (kind == FoodKind.meat && _current.hunger >= maxHearts) {
+      setState(() {
+        _menuIndex = -1;
+        _current.lastEvent = 'おなかがいっぱいのようです';
+      });
+      return;
+    }
+    if (kind == FoodKind.protein && _current.strength >= maxHearts) {
+      setState(() {
+        _menuIndex = -1;
+        _current.lastEvent = 'これ以上は飲みたくないようです';
+      });
+      return;
+    }
+    setState(() {
+      _menuIndex = -1;
+      _eating = true;
+      _eatFrame = 0;
+      _eatingFood = kind;
+      _current.lastEvent =
+          kind == FoodKind.meat ? 'おにくを食べています…' : 'プロテインを飲んでいます…';
+    });
+    _eatTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
+      setState(() {
+        _eatFrame++;
+        if (_eatFrame >= 8) {
+          timer.cancel();
+          _eatTimer = null;
+          _eating = false;
+          if (_eatingFood == FoodKind.meat) {
+            _current.hunger =
+                (_current.hunger + 1).clamp(0, maxHearts);
+            _current.lastEvent = 'おにくを食べました';
+          } else {
+            _current.strength =
+                (_current.strength + 1).clamp(0, maxHearts);
+            _current.lastEvent = 'プロテインを飲みました';
+          }
+          _eatingFood = null;
+        }
+      });
+    });
+  }
+
+  // ---- A / B / C ボタン ------------------------------------------------------
+
+  void _pressA() {
+    if (_eating) return;
+    setState(() {
+      _menuIndex = (_menuIndex + 1) % 2;
+      _current.lastEvent =
+          _menuIndex == 0 ? '「ごはん」を選択中（Bで決定）' : '「プロテイン」を選択中（Bで決定）';
+    });
+  }
+
+  void _pressB() {
+    if (_eating) return;
+    if (_menuIndex < 0) {
+      setState(() => _current.lastEvent = 'Aボタンでメニューを選んでください');
+      return;
+    }
+    _feed(_menuIndex == 0 ? FoodKind.meat : FoodKind.protein);
+  }
+
+  void _pressC() {
+    if (_eating) return;
+    if (_menuIndex >= 0) {
+      setState(() {
+        _menuIndex = -1;
+        _current.lastEvent = 'キャンセルしました';
+      });
+    }
+  }
+
+  // ---- デバッグ ---------------------------------------------------------------
+
   void _skipTime(Duration delta, String label) {
     setState(() {
       _current.startedAt = _current.startedAt.subtract(delta);
+      _current.nextHungerDecayAt = _current.nextHungerDecayAt.subtract(delta);
+      _current.nextStrengthDecayAt =
+          _current.nextStrengthDecayAt.subtract(delta);
       _current.lastEvent = '$label 時間を進めました';
       _updateStageByTime();
+      _updateNeedsByTime();
     });
   }
 
   void _resetTime() {
     setState(() {
-      _current.startedAt = DateTime.now();
+      _eatTimer?.cancel();
+      _eatTimer = null;
+      _eating = false;
+      _eatingFood = null;
+      _menuIndex = -1;
+      final now = DateTime.now();
+      _current.startedAt = now;
       _current.stage = milestones.first.stage;
+      _current.hunger = maxHearts;
+      _current.strength = maxHearts;
+      _current.nextHungerDecayAt = now.add(hungerDecayInterval);
+      _current.nextStrengthDecayAt = now.add(strengthDecayInterval);
       _current.lastEvent = '時間をリセットしました';
       _updateStageByTime();
     });
@@ -230,9 +459,17 @@ class _DigimonScreenState extends State<DigimonScreen> {
   }
 
   String get _summaryText {
+    if (!_isEgg && _current.hunger == 0) return 'おなかがすいています！';
+    if (!_isEgg && _current.strength == 0) return '元気がありません！';
     if (_isFinalStage) return '最終段階に到達しました';
     final remaining = _current.nextEvolutionAt.difference(DateTime.now());
     return '次の進化まで ${formatRemaining(remaining)}';
+  }
+
+  String? get _menuLabel {
+    if (_menuIndex == 0) return '▶ ごはん';
+    if (_menuIndex == 1) return '▶ プロテイン';
+    return null;
   }
 
   @override
@@ -259,13 +496,30 @@ class _DigimonScreenState extends State<DigimonScreen> {
                       summary: _summaryText,
                     ),
                     const SizedBox(height: 14),
-                    _DeviceBody(stage: _current.stage),
+                    _DeviceBody(
+                      stage: _current.stage,
+                      idleShift: _idleShift,
+                      eating: _eating,
+                      eatFrame: _eatFrame,
+                      eatingFood: _eatingFood,
+                      menuLabel: _menuLabel,
+                      needsCare: !_isEgg &&
+                          (_current.hunger == 0 || _current.strength == 0),
+                      onPressA: _pressA,
+                      onPressB: _pressB,
+                      onPressC: _pressC,
+                    ),
                     const SizedBox(height: 14),
                     _InfoPanel(
                       visible: _panelVisible,
                       stage: _current.stage,
+                      hunger: _current.hunger,
+                      strength: _current.strength,
+                      isEgg: _isEgg,
                       remainingText: _remainingText,
                       onToggle: () => setState(() => _panelVisible = !_panelVisible),
+                      onFeedMeat: () => _feed(FoodKind.meat),
+                      onFeedProtein: () => _feed(FoodKind.protein),
                       onSkip10s: () => _skipTime(const Duration(seconds: 10), '+10秒'),
                       onSkip10m: () => _skipTime(const Duration(minutes: 10), '+10分'),
                       onSkip6h: () => _skipTime(const Duration(hours: 6), '+6時間'),
@@ -336,12 +590,81 @@ class _StatusBar extends StatelessWidget {
 }
 
 class _DeviceBody extends StatelessWidget {
-  const _DeviceBody({required this.stage});
+  const _DeviceBody({
+    required this.stage,
+    required this.idleShift,
+    required this.eating,
+    required this.eatFrame,
+    required this.eatingFood,
+    required this.menuLabel,
+    required this.needsCare,
+    required this.onPressA,
+    required this.onPressB,
+    required this.onPressC,
+  });
+
   final String stage;
+  final bool idleShift;
+  final bool eating;
+  final int eatFrame;
+  final FoodKind? eatingFood;
+  final String? menuLabel;
+  final bool needsCare;
+  final VoidCallback onPressA;
+  final VoidCallback onPressB;
+  final VoidCallback onPressC;
 
   @override
   Widget build(BuildContext context) {
     final (:sprite, :offsetX, :offsetY) = spriteForStage(stage);
+
+    Widget screen;
+    if (eating && eatingFood != null) {
+      // 食事シーン: 左に食べ物、右にデジモン（縮小表示）。
+      // 専用の食事ドット絵が無いため、デジモン本体を1ドット分
+      // 前後（食べ物側とその逆）に往復させて食べている様子を表現する。
+      final foodStage = (eatFrame ~/ 3).clamp(0, 2);
+      final foodSprite = eatingFood == FoodKind.meat
+          ? meatSprites[foodStage]
+          : proteinSprites[foodStage];
+      final sway = eatFrame.isOdd ? -8 : 0; // 1ドット（8px）食べ物側へ
+      screen = Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(
+              painter: SpritePainter(
+                sprite: foodSprite,
+                offsetX: 4,
+                offsetY: 124,
+                dotSize: 8,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: CustomPaint(
+              painter: SpritePainter(
+                sprite: sprite,
+                offsetX: 66 + sway,
+                offsetY: 58,
+                dotSize: 8,
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // 通常シーン: 1秒ごとに1ドット分左右へ揺れて生きている様子を表現する。
+      final shift = (!eating && stage != 'Digitama' && idleShift) ? 11 : 0;
+      screen = CustomPaint(
+        size: const Size(200, 200),
+        painter: SpritePainter(
+          sprite: sprite,
+          offsetX: offsetX + shift,
+          offsetY: offsetY,
+        ),
+      );
+    }
+
     return Container(
       width: 380,
       height: 270,
@@ -395,13 +718,44 @@ class _DeviceBody extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: CustomPaint(
-                    size: const Size(200, 200),
-                    painter: SpritePainter(
-                      sprite: sprite,
-                      offsetX: offsetX,
-                      offsetY: offsetY,
-                    ),
+                  child: Stack(
+                    children: [
+                      SizedBox.expand(child: screen),
+                      if (menuLabel != null)
+                        Positioned(
+                          top: 6,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
+                              color: const Color(0xFF111827),
+                              child: Text(
+                                menuLabel!,
+                                style: const TextStyle(
+                                  color: Color(0xFFEEE7E0),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (needsCare)
+                        const Positioned(
+                          top: 4,
+                          right: 6,
+                          child: Text(
+                            '!',
+                            style: TextStyle(
+                              color: Color(0xFF111827),
+                              fontSize: 22,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ),
@@ -413,11 +767,11 @@ class _DeviceBody extends StatelessWidget {
             left: 240,
             child: Row(
               children: [
-                _LegacyButton(label: 'A'),
+                _LegacyButton(label: 'A', hint: 'えらぶ', onPressed: onPressA),
                 const SizedBox(width: 8),
-                _LegacyButton(label: 'B'),
+                _LegacyButton(label: 'B', hint: 'けってい', onPressed: onPressB),
                 const SizedBox(width: 8),
-                _LegacyButton(label: 'C'),
+                _LegacyButton(label: 'C', hint: 'キャンセル', onPressed: onPressC),
               ],
             ),
           ),
@@ -428,35 +782,44 @@ class _DeviceBody extends StatelessWidget {
 }
 
 class _LegacyButton extends StatelessWidget {
-  const _LegacyButton({required this.label});
+  const _LegacyButton({
+    required this.label,
+    required this.hint,
+    required this.onPressed,
+  });
   final String label;
+  final String hint;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: '今回は観察モードです',
-      child: Container(
-        width: 38,
-        height: 38,
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFCB03),
-          shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF006611), width: 4),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.4),
-              blurRadius: 10,
-              spreadRadius: -2,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF004411),
+      message: hint,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFCB03),
+            shape: BoxShape.circle,
+            border: Border.all(color: const Color(0xFF006611), width: 4),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 10,
+                spreadRadius: -2,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF004411),
+              ),
             ),
           ),
         ),
@@ -469,8 +832,13 @@ class _InfoPanel extends StatelessWidget {
   const _InfoPanel({
     required this.visible,
     required this.stage,
+    required this.hunger,
+    required this.strength,
+    required this.isEgg,
     required this.remainingText,
     required this.onToggle,
+    required this.onFeedMeat,
+    required this.onFeedProtein,
     required this.onSkip10s,
     required this.onSkip10m,
     required this.onSkip6h,
@@ -479,8 +847,13 @@ class _InfoPanel extends StatelessWidget {
 
   final bool visible;
   final String stage;
+  final int hunger;
+  final int strength;
+  final bool isEgg;
   final String remainingText;
   final VoidCallback onToggle;
+  final VoidCallback onFeedMeat;
+  final VoidCallback onFeedProtein;
   final VoidCallback onSkip10s;
   final VoidCallback onSkip10m;
   final VoidCallback onSkip6h;
@@ -506,14 +879,40 @@ class _InfoPanel extends StatelessWidget {
         children: [
           if (visible) ...[
             const Text(
-              '時間の経過にあわせて進化していくデジモンを観察できます。',
+              '時間の経過にあわせて進化していくデジモンを育てられます。'
+              'おなかがすいたら「ごはん」、元気がなくなったら「プロテイン」をあげましょう。'
+              '本体のAボタンでメニューを選び、Bボタンで決定、Cボタンでキャンセルできます。',
               style: TextStyle(
                 color: Color(0xFF0F172A),
                 height: 1.6,
               ),
             ),
             const SizedBox(height: 12),
-            _StatusCards(stage: stage, remainingText: remainingText),
+            _StatusCards(
+              stage: stage,
+              hunger: hunger,
+              strength: strength,
+              isEgg: isEgg,
+              remainingText: remainingText,
+            ),
+            const SizedBox(height: 14),
+            const Text(
+              'お世話',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF475569),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 10,
+              runSpacing: 8,
+              children: [
+                _SecondaryButton(label: 'ごはん（おにく）', onPressed: onFeedMeat),
+                _SecondaryButton(label: 'プロテイン', onPressed: onFeedProtein),
+              ],
+            ),
             const SizedBox(height: 14),
           ],
           Wrap(
@@ -542,8 +941,17 @@ class _InfoPanel extends StatelessWidget {
 }
 
 class _StatusCards extends StatelessWidget {
-  const _StatusCards({required this.stage, required this.remainingText});
+  const _StatusCards({
+    required this.stage,
+    required this.hunger,
+    required this.strength,
+    required this.isEgg,
+    required this.remainingText,
+  });
   final String stage;
+  final int hunger;
+  final int strength;
+  final bool isEgg;
   final String remainingText;
 
   @override
@@ -553,8 +961,8 @@ class _StatusCards extends StatelessWidget {
       runSpacing: 10,
       children: [
         _StatusCard(label: '成長段階', value: stage),
-        const _StatusCard(label: '空腹度', value: 'なし'),
-        const _StatusCard(label: '体力', value: 'なし'),
+        _StatusCard(label: '満腹度', value: isEgg ? '−' : heartsText(hunger)),
+        _StatusCard(label: '体力', value: isEgg ? '−' : heartsText(strength)),
         _StatusCard(label: '状態', value: remainingText),
       ],
     );
@@ -677,11 +1085,13 @@ class SpritePainter extends CustomPainter {
     required this.sprite,
     this.offsetX = 0,
     this.offsetY = 0,
+    this.dotSize = 11,
   });
 
   final List<List<int>> sprite;
   final int offsetX;
   final int offsetY;
+  final double dotSize;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -691,10 +1101,10 @@ class SpritePainter extends CustomPainter {
         if (sprite[y][x] == 1) {
           canvas.drawRect(
             Rect.fromLTWH(
-              (offsetX + x * 11).toDouble(),
-              (offsetY + y * 11).toDouble(),
-              10,
-              10,
+              offsetX + x * dotSize,
+              offsetY + y * dotSize,
+              dotSize - 1,
+              dotSize - 1,
             ),
             paint,
           );
@@ -705,5 +1115,8 @@ class SpritePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SpritePainter old) =>
-      old.sprite != sprite || old.offsetX != offsetX || old.offsetY != offsetY;
+      old.sprite != sprite ||
+      old.offsetX != offsetX ||
+      old.offsetY != offsetY ||
+      old.dotSize != dotSize;
 }
